@@ -6,11 +6,11 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 
-@Mod(ReliquifiedIronsSpellsAndSpellboks.MODID)
-public class ReliquifiedIronsSpellsAndSpellboks {
+@Mod(ReliquifiedIronsSpellsAndSpellbooks.MODID)
+public class ReliquifiedIronsSpellsAndSpellbooks {
     public static final String MODID = "reliquified_irons_spells_and_spellbooks";
 
-    public ReliquifiedIronsSpellsAndSpellboks(IEventBus bus) {
+    public ReliquifiedIronsSpellsAndSpellbooks(IEventBus bus) {
         bus.addListener(this::setupCommon);
 
         ItemRegistry.register(bus);
