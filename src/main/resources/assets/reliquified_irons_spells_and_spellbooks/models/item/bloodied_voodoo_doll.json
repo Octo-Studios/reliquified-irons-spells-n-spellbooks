@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "reliquified_irons_spells_and_spellbooks:item/bloodied_voodoo_doll"
+  }
+}

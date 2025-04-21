@@ -1,0 +1,8 @@
+{
+  "item.reliquified_irons_spells_and_spellbooks.hyperfocus_glove": "Перчатка суперфокуса",
+  "tooltip.relics.hyperfocus_glove.description": "",
+  "tooltip.relics.hyperfocus_glove.ability.absorption": "",
+  "tooltip.relics.hyperfocus_glove.ability.absorption.description": "Кол-во зарядов - %1$s Процент улучшения за заряд - %2$s%%",
+  "tooltip.relics.hyperfocus_glove.leveling_source.absorption.title": "",
+  "tooltip.relics.hyperfocus_glove.leveling_source.absorption.description": ""
+}
