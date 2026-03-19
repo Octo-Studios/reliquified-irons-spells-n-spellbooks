@@ -1,6 +1,15 @@
 {
   "replace": false,
   "values": [
-
+    "reliquified_irons_spells_and_spellbooks:bloodied_voodoo_doll",
+    "reliquified_irons_spells_and_spellbooks:cardiac_trap",
+    "reliquified_irons_spells_and_spellbooks:cloak_of_the_bloody_feather",
+    "reliquified_irons_spells_and_spellbooks:flask_of_the_red_mist",
+    "reliquified_irons_spells_and_spellbooks:hat_of_omniscience",
+    "reliquified_irons_spells_and_spellbooks:living_flesh",
+    "reliquified_irons_spells_and_spellbooks:mask_of_hunger",
+    "reliquified_irons_spells_and_spellbooks:ring_of_blades",
+    "reliquified_irons_spells_and_spellbooks:sinner_crown",
+    "reliquified_irons_spells_and_spellbooks:slicer"
   ]
 }

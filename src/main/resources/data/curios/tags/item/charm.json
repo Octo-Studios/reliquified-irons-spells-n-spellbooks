@@ -1,6 +1,8 @@
 {
   "replace": false,
   "values": [
-
+    "reliquified_irons_spells_and_spellbooks:bloody_voodoo_doll",
+    "reliquified_irons_spells_and_spellbooks:flask_of_the_red_mist",
+    "reliquified_irons_spells_and_spellbooks:living_flesh"
   ]
 }

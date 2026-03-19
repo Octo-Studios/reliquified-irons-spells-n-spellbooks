@@ -2,6 +2,7 @@ package it.hurts.octostudios.reliquified_irons_spells_and_spellbooks;
 
 import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.init.EntityRegistry;
 import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.init.ItemRegistry;
+import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.init.RISASDataComponents;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -15,6 +16,7 @@ public class ReliquifiedIronsSpellsAndSpellbooks {
 
         ItemRegistry.register(bus);
         EntityRegistry.register(bus);
+        RISASDataComponents.register(bus);
     }
 
     private void setupCommon(final FMLCommonSetupEvent event) {
