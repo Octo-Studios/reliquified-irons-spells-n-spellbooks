@@ -95,6 +95,10 @@ public class LivingFleshItem extends ISASRelic {
                                                 .formatValue(value -> String.valueOf(Math.max(0, (int) MathUtils.round(value, 0))))
                                                 .rankModifierVisibilityState("gluttonous_devour", VisibilityState.OBFUSCATED)
                                                 .build())
+                                        .metric(AbilityMetricTemplate.builder("devour_healing_restored")
+                                                .formatValue(value -> String.valueOf(MathUtils.round(value, 2)))
+                                                .rankModifierVisibilityState("vital_feast", VisibilityState.OBFUSCATED)
+                                                .build())
                                         .build())
                                 .build())
                         .build())
@@ -110,8 +114,9 @@ public class LivingFleshItem extends ISASRelic {
             return;
 
         var marks = CommonEvents.getMarks(stack);
+        var scheduledDevours = CommonEvents.getScheduledDevours(stack);
 
-        if (marks.isEmpty())
+        if (marks.isEmpty() && scheduledDevours.isEmpty())
             return;
 
         var server = player.getServer();
@@ -194,6 +199,59 @@ public class LivingFleshItem extends ISASRelic {
 
         if (changed)
             CommonEvents.setMarks(stack, updated);
+
+        if (scheduledDevours.isEmpty())
+            return;
+
+        var updatedScheduledDevours = new ArrayList<RISASDataComponents.LivingFleshScheduledDevourData>(scheduledDevours.size());
+        var scheduledChanged = false;
+
+        for (var scheduledDevour : scheduledDevours) {
+            var level = server.getLevel(scheduledDevour.level());
+
+            if (level == null) {
+                updatedScheduledDevours.add(scheduledDevour);
+                continue;
+            }
+
+            if (scheduledDevour.triggerAtTick() > level.getGameTime()) {
+                updatedScheduledDevours.add(scheduledDevour);
+                continue;
+            }
+
+            var entity = level.getEntity(scheduledDevour.target());
+
+            if (!(entity instanceof LivingEntity target) || !target.isAlive()) {
+                scheduledChanged = true;
+                continue;
+            }
+
+            var caster = level.getServer().getPlayerList().getPlayer(scheduledDevour.caster());
+            LivingEntity owner = caster != null && caster.isAlive() && caster.level() == level ? caster : target;
+            var payload = scheduledDevour.payload();
+            var devourDamage = (float) Math.max(0D, payload.devourDamage());
+
+            if (devourDamage <= 0F) {
+                scheduledChanged = true;
+                continue;
+            }
+
+            var repeatJaw = new DevourJaw(level, owner, target);
+
+            repeatJaw.setPos(target.position());
+            repeatJaw.setYRot(owner.getYRot());
+            repeatJaw.setDamage(devourDamage);
+            repeatJaw.getPersistentData().putBoolean("risas_living_flesh_devour", true);
+            repeatJaw.getPersistentData().putBoolean("risas_living_flesh_repeatable", false);
+            repeatJaw.getPersistentData().putDouble("risas_living_flesh_food", Math.max(0D, payload.food()));
+            repeatJaw.getPersistentData().putDouble("risas_living_flesh_saturation", Math.max(0D, payload.saturation()));
+            repeatJaw.getPersistentData().putDouble("risas_living_flesh_heal", Math.max(0D, payload.heal()));
+            level.addFreshEntity(repeatJaw);
+            scheduledChanged = true;
+        }
+
+        if (scheduledChanged)
+            CommonEvents.setScheduledDevours(stack, updatedScheduledDevours);
     }
 
     @EventBusSubscriber(modid = ReliquifiedIronsSpellsAndSpellbooks.MODID)
@@ -215,6 +273,7 @@ public class LivingFleshItem extends ISASRelic {
                 var healToAdd = (float) Math.max(0D, jaw.getPersistentData().getDouble("risas_living_flesh_heal"));
                 var foodData = caster.getFoodData();
                 var foodBefore = foodData.getFoodLevel();
+                var healthBefore = caster.getHealth();
 
                 if (foodToAdd > 0)
                     foodData.setFoodLevel(Math.min(20, foodData.getFoodLevel() + foodToAdd));
@@ -224,6 +283,8 @@ public class LivingFleshItem extends ISASRelic {
 
                 if (healToAdd > 0F)
                     caster.heal(healToAdd);
+
+                var restoredHealth = Math.max(0F, caster.getHealth() - healthBefore);
 
                 LivingFleshItem relic = null;
                 ItemStack stack = ItemStack.EMPTY;
@@ -260,9 +321,10 @@ public class LivingFleshItem extends ISASRelic {
 
                     if (ability.isRankModifierUnlocked("gluttonous_devour") && restoredFood > 0)
                         ability.getStatisticData().getMetricData("devour_food_restored").addValue(restoredFood);
-                }
 
-                var spawnedRepeats = 0;
+                    if (ability.isRankModifierUnlocked("vital_feast") && restoredHealth > 0F)
+                        ability.getStatisticData().getMetricData("devour_healing_restored").addValue(restoredHealth);
+                }
 
                 if (jaw.getPersistentData().getBoolean("risas_living_flesh_repeatable")
                         && event.getEntity() instanceof LivingEntity target
@@ -271,24 +333,28 @@ public class LivingFleshItem extends ISASRelic {
                     var repeatLimit = Math.max(0, jaw.getPersistentData().getInt("risas_living_flesh_repeat_limit"));
                     var repeatChance = Mth.clamp(jaw.getPersistentData().getDouble("risas_living_flesh_repeat_chance"), 0D, 1D);
 
-                    if (repeatLimit > 0 && repeatChance > 0D) {
+                    if (!stack.isEmpty() && repeatLimit > 0 && repeatChance > 0D) {
                         var repeats = MathUtils.multicast(level.getRandom(), repeatChance, repeatLimit);
 
-                        for (var i = 0; i < repeats; i++) {
-                            var owner = caster.isAlive() && caster.level() == level ? caster : target;
-                            var repeatJaw = new DevourJaw(level, owner, target);
+                        if (repeats > 0) {
+                            var scheduledDevours = new ArrayList<>(getScheduledDevours(stack));
 
-                            repeatJaw.setPos(target.position());
-                            repeatJaw.setYRot(owner.getYRot());
-                            repeatJaw.setDamage(jaw.getDamage());
-                            repeatJaw.getPersistentData().putBoolean("risas_living_flesh_devour", true);
-                            repeatJaw.getPersistentData().putBoolean("risas_living_flesh_repeatable", false);
-                            repeatJaw.getPersistentData().putDouble("risas_living_flesh_food", jaw.getPersistentData().getDouble("risas_living_flesh_food"));
-                            repeatJaw.getPersistentData().putDouble("risas_living_flesh_saturation", jaw.getPersistentData().getDouble("risas_living_flesh_saturation"));
-                            repeatJaw.getPersistentData().putDouble("risas_living_flesh_heal", jaw.getPersistentData().getDouble("risas_living_flesh_heal"));
+                            for (var i = 0; i < repeats; i++) {
+                                scheduledDevours.add(new RISASDataComponents.LivingFleshScheduledDevourData(
+                                        target.getUUID(),
+                                        level.dimension(),
+                                        caster.getUUID(),
+                                        level.getGameTime() + (long) (i + 1) * 30L,
+                                        new RISASDataComponents.LivingFleshScheduledDevourPayload(
+                                                jaw.getDamage(),
+                                                Math.max(0D, jaw.getPersistentData().getDouble("risas_living_flesh_food")),
+                                                Math.max(0D, jaw.getPersistentData().getDouble("risas_living_flesh_saturation")),
+                                                Math.max(0D, jaw.getPersistentData().getDouble("risas_living_flesh_heal"))
+                                        )
+                                ));
+                            }
 
-                            level.addFreshEntity(repeatJaw);
-                            spawnedRepeats++;
+                            setScheduledDevours(stack, scheduledDevours);
                         }
                     }
                 }
@@ -439,6 +505,10 @@ public class LivingFleshItem extends ISASRelic {
             return stack.getOrDefault(RISASDataComponents.LIVING_FLESH_MARKS.get(), List.of());
         }
 
+        private static List<RISASDataComponents.LivingFleshScheduledDevourData> getScheduledDevours(ItemStack stack) {
+            return stack.getOrDefault(RISASDataComponents.LIVING_FLESH_SCHEDULED_DEVOURS.get(), List.of());
+        }
+
         private static void setMarks(ItemStack stack, List<RISASDataComponents.LivingFleshMarkData> marks) {
             if (marks.isEmpty()) {
                 stack.remove(RISASDataComponents.LIVING_FLESH_MARKS.get());
@@ -447,6 +517,14 @@ public class LivingFleshItem extends ISASRelic {
 
             stack.set(RISASDataComponents.LIVING_FLESH_MARKS.get(), List.copyOf(marks));
         }
+
+        private static void setScheduledDevours(ItemStack stack, List<RISASDataComponents.LivingFleshScheduledDevourData> scheduledDevours) {
+            if (scheduledDevours.isEmpty()) {
+                stack.remove(RISASDataComponents.LIVING_FLESH_SCHEDULED_DEVOURS.get());
+                return;
+            }
+
+            stack.set(RISASDataComponents.LIVING_FLESH_SCHEDULED_DEVOURS.get(), List.copyOf(scheduledDevours));
+        }
     }
 }
-

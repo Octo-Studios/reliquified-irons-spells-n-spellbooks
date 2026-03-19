@@ -2,6 +2,7 @@ package it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.items;
 
 import io.redspace.ironsspellbooks.api.magic.MagicData;
 import io.redspace.ironsspellbooks.damage.DamageSources;
+import io.redspace.ironsspellbooks.damage.ISSDamageTypes;
 import io.redspace.ironsspellbooks.registries.MobEffectRegistry;
 import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.ReliquifiedIronsSpellsAndSpellbooks;
 import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.init.RISASItems;
@@ -155,9 +156,10 @@ public class CardiacTrapItem extends ISASRelic {
                 return;
 
             var gameTime = player.level().getGameTime();
+            var isHeartstopDamage = event.getSource().is(ISSDamageTypes.HEARTSTOP);
 
             for (var candidateStack : EntityUtils.findEquippedCurios(player, RISASItems.CARDIAC_TRAP.value())) {
-                if (candidateStack.getOrDefault(RISASDataComponents.cardiac_trap_HEARTSTOP_UNTIL.get(), 0L) > gameTime)
+                if (!isHeartstopDamage && candidateStack.getOrDefault(RISASDataComponents.cardiac_trap_HEARTSTOP_UNTIL.get(), 0L) > gameTime)
                     return;
 
                 if (candidateStack.getOrDefault(RISASDataComponents.cardiac_trap_PENDING_HEARTSTOP_AT.get(), 0L) > 0L)
@@ -202,9 +204,11 @@ public class CardiacTrapItem extends ISASRelic {
                 return;
 
             var relicData = item.getRelicData(player, stack);
-            var preventedDamage = Math.max(0D, event.getOriginalDamage() - Math.max(0F, player.getHealth() + player.getAbsorptionAmount() - 1F));
+            var incomingDamage = Math.max(0F, event.getNewDamage());
+            var appliedDamage = Math.max(0F, player.getHealth() + player.getAbsorptionAmount() - 1F);
+            var preventedDamage = Math.max(0D, incomingDamage - appliedDamage);
 
-            event.setNewDamage(Math.max(0F, player.getHealth() + player.getAbsorptionAmount() - 1F));
+            event.setNewDamage(appliedDamage);
 
             var durationTicks = Math.max(0, (int) Math.round(bestDuration * 20D));
             ability.getStatisticData().getMetricData("ability_triggers").addValue(1D);
@@ -216,7 +220,7 @@ public class CardiacTrapItem extends ISASRelic {
             if (durationTicks > 0) {
                 stack.set(RISASDataComponents.cardiac_trap_PENDING_HEARTSTOP_AT.get(), gameTime + 1L);
                 stack.set(RISASDataComponents.cardiac_trap_PENDING_HEARTSTOP_DURATION.get(), durationTicks);
-                stack.set(RISASDataComponents.cardiac_trap_PENDING_HEARTSTOP_DAMAGE.get(), Math.max(0D, event.getOriginalDamage() * 0.5D));
+                stack.set(RISASDataComponents.cardiac_trap_PENDING_HEARTSTOP_DAMAGE.get(), Math.max(0D, incomingDamage * 0.5D));
             } else {
                 stack.remove(RISASDataComponents.cardiac_trap_HEARTSTOP_UNTIL.get());
                 stack.remove(RISASDataComponents.cardiac_trap_PENDING_HEARTSTOP_AT.get());
@@ -306,4 +310,3 @@ public class CardiacTrapItem extends ISASRelic {
         }
     }
 }
-

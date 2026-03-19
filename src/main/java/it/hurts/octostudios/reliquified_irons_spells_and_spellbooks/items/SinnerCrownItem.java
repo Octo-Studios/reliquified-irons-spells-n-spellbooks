@@ -174,6 +174,19 @@ public class SinnerCrownItem extends ISASRelic {
         if (!(slotContext.entity() instanceof ServerPlayer player) || player.level().isClientSide())
             return;
 
+        if (newStack.getItem() instanceof SinnerCrownItem) {
+            if (newStack != stack && CommonEvents.getSummons(newStack).isEmpty()) {
+                var summons = CommonEvents.getSummons(stack);
+
+                if (!summons.isEmpty()) {
+                    CommonEvents.setSummons(newStack, summons);
+                    CommonEvents.setSummons(stack, List.of());
+                }
+            }
+
+            return;
+        }
+
         CommonEvents.discardOwnedSummons(player);
         CommonEvents.setSummons(stack, List.of());
     }
@@ -586,4 +599,3 @@ public class SinnerCrownItem extends ISASRelic {
         }
     }
 }
-

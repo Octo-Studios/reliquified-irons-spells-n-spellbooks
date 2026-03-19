@@ -111,6 +111,12 @@ public class FlaskOfTheRedMistItem extends ISASRelic {
             if (event.getSource().is(DamageTypeTags.BYPASSES_INVULNERABILITY))
                 return;
 
+            if (!(player.level() instanceof ServerLevel level))
+                return;
+
+            if (!(event.getSource().getEntity() instanceof LivingEntity attacker) || !attacker.isAlive() || attacker == player)
+                return;
+
             if (Math.max(0F, event.getNewDamage() - player.getAbsorptionAmount()) < player.getHealth())
                 return;
 
@@ -155,41 +161,38 @@ public class FlaskOfTheRedMistItem extends ISASRelic {
             if (preventedDamage > 0D)
                 relicData.getLevelingData().addExperience("red_mist", "prevented_damage", preventedDamage);
 
-            if (player.level() instanceof ServerLevel level && event.getSource().getEntity() instanceof LivingEntity attacker && attacker.isAlive()) {
-                var look = attacker.getLookAngle();
-                var horizontalLook = new Vec3(look.x, 0D, look.z);
+            var look = attacker.getLookAngle();
+            var horizontalLook = new Vec3(look.x, 0D, look.z);
 
-                if (horizontalLook.lengthSqr() < 1.0E-4D)
-                    horizontalLook = new Vec3(0D, 0D, 1D).yRot((float) Math.toRadians(-attacker.getYRot()));
+            if (horizontalLook.lengthSqr() < 1.0E-4D)
+                horizontalLook = new Vec3(0D, 0D, 1D).yRot((float) Math.toRadians(-attacker.getYRot()));
 
-                var behind = attacker.position().subtract(horizontalLook.normalize().scale(attacker.getBbWidth() + 1.35D));
-                var destination = TeleportSpell.solveTeleportDestination(level, player, BlockPos.containing(behind), behind);
-                var magicData = MagicData.getPlayerMagicData(player);
+            var behind = attacker.position().subtract(horizontalLook.normalize().scale(attacker.getBbWidth() + 1.35D));
+            var destination = TeleportSpell.solveTeleportDestination(level, player, BlockPos.containing(behind), behind);
+            var magicData = MagicData.getPlayerMagicData(player);
 
-                magicData.setAdditionalCastData(new TeleportSpell.TeleportData(destination));
-                SpellRegistry.BLOOD_STEP_SPELL.get().onCast(level, 1, player, CastSource.SWORD, magicData);
-                magicData.resetAdditionalCastData();
+            magicData.setAdditionalCastData(new TeleportSpell.TeleportData(destination));
+            SpellRegistry.BLOOD_STEP_SPELL.get().onCast(level, 1, player, CastSource.SWORD, magicData);
+            magicData.resetAdditionalCastData();
 
-                if (ability.isRankModifierUnlocked("smokescreen")) {
-                    var blindnessTicks = Math.max(0, (int) Math.round(Math.max(0D, ability.getStatData("blindness_duration").getValue()) * 20D));
+            if (ability.isRankModifierUnlocked("smokescreen")) {
+                var blindnessTicks = Math.max(0, (int) Math.round(Math.max(0D, ability.getStatData("blindness_duration").getValue()) * 20D));
 
-                    if (blindnessTicks > 0 && attacker.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, blindnessTicks, 0, false, true, true))) {
-                        ability.getStatisticData().getMetricData("smokescreen_blindness_duration").addValue(blindnessTicks / 20D);
-                        relicData.getLevelingData().addExperience("red_mist", "blinded_target", 1D);
-                    }
+                if (blindnessTicks > 0 && attacker.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, blindnessTicks, 0, false, true, true))) {
+                    ability.getStatisticData().getMetricData("smokescreen_blindness_duration").addValue(blindnessTicks / 20D);
+                    relicData.getLevelingData().addExperience("red_mist", "blinded_target", 1D);
                 }
+            }
 
-                if (ability.isRankModifierUnlocked("hunt_mark")) {
-                    var radius = Math.max(0D, ability.getStatData("taunt_radius").getValue());
-                    var taunted = 0;
+            if (ability.isRankModifierUnlocked("hunt_mark")) {
+                var radius = Math.max(0D, ability.getStatData("taunt_radius").getValue());
+                var taunted = 0;
 
-                    if (radius > 0D) {
-                        for (var mob : level.getEntitiesOfClass(Mob.class, attacker.getBoundingBox().inflate(radius), mob -> mob != attacker && mob.isAlive() && !mob.getStringUUID().equals(player.getStringUUID()))) {
-                            mob.setTarget(attacker);
-                            taunted++;
-                        }
+                if (radius > 0D) {
+                    for (var mob : level.getEntitiesOfClass(Mob.class, attacker.getBoundingBox().inflate(radius), mob -> mob != attacker && mob.isAlive() && !mob.getStringUUID().equals(player.getStringUUID()))) {
+                        mob.setTarget(attacker);
+                        taunted++;
                     }
-
                 }
             }
 
@@ -264,4 +267,3 @@ public class FlaskOfTheRedMistItem extends ISASRelic {
         }
     }
 }
-

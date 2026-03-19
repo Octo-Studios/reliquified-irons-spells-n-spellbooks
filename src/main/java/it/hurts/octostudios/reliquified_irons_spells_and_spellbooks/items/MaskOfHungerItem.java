@@ -2,6 +2,7 @@ package it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.items;
 
 import io.redspace.ironsspellbooks.api.registry.SpellRegistry;
 import io.redspace.ironsspellbooks.damage.DamageSources;
+import io.redspace.ironsspellbooks.damage.SpellDamageSource;
 import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.ReliquifiedIronsSpellsAndSpellbooks;
 import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.init.RISASItems;
 import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.init.RISASDataComponents;
@@ -188,11 +189,22 @@ public class MaskOfHungerItem extends ISASRelic {
 
             for (var target : targets) {
                 var targetHealthBefore = target.getHealth();
+                var targetEffectiveBefore = Math.max(0F, target.getHealth() + target.getAbsorptionAmount());
+                var damageSource = SpellRegistry.RAY_OF_SIPHONING_SPELL.get().getDamageSource(player, player);
 
-                if (!DamageSources.applyDamage(target, (float) bestDamage, SpellRegistry.RAY_OF_SIPHONING_SPELL.get().getDamageSource(player, player)))
+                if (damageSource instanceof SpellDamageSource spellDamageSource && spellDamageSource.getLifestealPercent() > 0F)
+                    spellDamageSource.setLifestealPercent(0F);
+
+                if (!DamageSources.applyDamage(target, (float) bestDamage, damageSource))
                     continue;
 
-                totalDamage += Math.max(0D, targetHealthBefore - target.getHealth());
+                var targetEffectiveAfter = target.isAlive() ? Math.max(0F, target.getHealth() + target.getAbsorptionAmount()) : 0F;
+                var dealtDamage = Math.max(0D, targetEffectiveBefore - targetEffectiveAfter);
+
+                if (dealtDamage <= 0D)
+                    dealtDamage = bestDamage;
+
+                totalDamage += dealtDamage;
                 targetsDrained++;
                 killedAny = killedAny || targetHealthBefore > 0F && !target.isAlive();
 
@@ -255,4 +267,3 @@ public class MaskOfHungerItem extends ISASRelic {
         }
     }
 }
-

@@ -76,6 +76,11 @@ public class RISASDataComponents {
             LivingFleshMarkData.CODEC.listOf(),
             LivingFleshMarkData.STREAM_CODEC.apply(ByteBufCodecs.list())
     );
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<List<LivingFleshScheduledDevourData>>> LIVING_FLESH_SCHEDULED_DEVOURS = construct(
+            "living_flesh/scheduled_devours",
+            LivingFleshScheduledDevourData.CODEC.listOf(),
+            LivingFleshScheduledDevourData.STREAM_CODEC.apply(ByteBufCodecs.list())
+    );
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Long>> MASK_OF_HUNGER_COOLDOWN_UNTIL = construct(
             "mask_of_hunger/cooldown_until",
             Codec.LONG,
@@ -298,6 +303,51 @@ public class RISASDataComponents {
                 ByteBufCodecs.DOUBLE,
                 LivingFleshMarkData::devourDamage,
                 LivingFleshMarkData::new
+        );
+    }
+
+    public record LivingFleshScheduledDevourPayload(double devourDamage, double food, double saturation, double heal) {
+        public static final Codec<LivingFleshScheduledDevourPayload> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                Codec.DOUBLE.fieldOf("devour_damage").forGetter(LivingFleshScheduledDevourPayload::devourDamage),
+                Codec.DOUBLE.fieldOf("food").forGetter(LivingFleshScheduledDevourPayload::food),
+                Codec.DOUBLE.fieldOf("saturation").forGetter(LivingFleshScheduledDevourPayload::saturation),
+                Codec.DOUBLE.fieldOf("heal").forGetter(LivingFleshScheduledDevourPayload::heal)
+        ).apply(instance, LivingFleshScheduledDevourPayload::new));
+
+        public static final StreamCodec<RegistryFriendlyByteBuf, LivingFleshScheduledDevourPayload> STREAM_CODEC = StreamCodec.composite(
+                ByteBufCodecs.DOUBLE,
+                LivingFleshScheduledDevourPayload::devourDamage,
+                ByteBufCodecs.DOUBLE,
+                LivingFleshScheduledDevourPayload::food,
+                ByteBufCodecs.DOUBLE,
+                LivingFleshScheduledDevourPayload::saturation,
+                ByteBufCodecs.DOUBLE,
+                LivingFleshScheduledDevourPayload::heal,
+                LivingFleshScheduledDevourPayload::new
+        );
+    }
+
+    public record LivingFleshScheduledDevourData(UUID target, ResourceKey<Level> level, UUID caster, long triggerAtTick, LivingFleshScheduledDevourPayload payload) {
+        public static final Codec<LivingFleshScheduledDevourData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                UUIDUtil.CODEC.fieldOf("target").forGetter(LivingFleshScheduledDevourData::target),
+                Level.RESOURCE_KEY_CODEC.fieldOf("level").forGetter(LivingFleshScheduledDevourData::level),
+                UUIDUtil.CODEC.fieldOf("caster").forGetter(LivingFleshScheduledDevourData::caster),
+                Codec.LONG.fieldOf("trigger_at_tick").forGetter(LivingFleshScheduledDevourData::triggerAtTick),
+                LivingFleshScheduledDevourPayload.CODEC.fieldOf("payload").forGetter(LivingFleshScheduledDevourData::payload)
+        ).apply(instance, LivingFleshScheduledDevourData::new));
+
+        public static final StreamCodec<RegistryFriendlyByteBuf, LivingFleshScheduledDevourData> STREAM_CODEC = StreamCodec.composite(
+                UUIDUtil.STREAM_CODEC,
+                LivingFleshScheduledDevourData::target,
+                ResourceKey.streamCodec(Registries.DIMENSION),
+                LivingFleshScheduledDevourData::level,
+                UUIDUtil.STREAM_CODEC,
+                LivingFleshScheduledDevourData::caster,
+                ByteBufCodecs.VAR_LONG,
+                LivingFleshScheduledDevourData::triggerAtTick,
+                LivingFleshScheduledDevourPayload.STREAM_CODEC,
+                LivingFleshScheduledDevourData::payload,
+                LivingFleshScheduledDevourData::new
         );
     }
 

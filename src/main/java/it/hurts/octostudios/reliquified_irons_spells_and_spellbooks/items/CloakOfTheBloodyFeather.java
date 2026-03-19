@@ -33,6 +33,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import top.theillusivec4.curios.api.SlotContext;
 
 public class CloakOfTheBloodyFeather extends ISASRelic {
@@ -177,6 +178,18 @@ public class CloakOfTheBloodyFeather extends ISASRelic {
 
     @EventBusSubscriber(modid = ReliquifiedIronsSpellsAndSpellbooks.MODID)
     public static class CommonEvents {
+        @SubscribeEvent
+        public static void onNeedleIncomingDamage(LivingIncomingDamageEvent event) {
+            if (!(event.getSource().getDirectEntity() instanceof BloodNeedle needle))
+                return;
+
+            if (!needle.getPersistentData().getBoolean("risas_cloak_of_the_bloody_feather"))
+                return;
+
+            if (event.getSource() instanceof io.redspace.ironsspellbooks.damage.SpellDamageSource source && source.getLifestealPercent() > 0F)
+                source.setLifestealPercent(0F);
+        }
+
         @SubscribeEvent
         public static void onLivingDamagePost(LivingDamageEvent.Post event) {
             if (!(event.getEntity().level() instanceof ServerLevel level) || event.getNewDamage() <= 0F)
@@ -335,4 +348,3 @@ public class CloakOfTheBloodyFeather extends ISASRelic {
         }
     }
 }
-

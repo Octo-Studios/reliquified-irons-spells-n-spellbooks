@@ -25,7 +25,6 @@ import it.hurts.sskirillss.relics.init.RelicsScalingModels;
 import it.hurts.sskirillss.relics.items.misc.CreativeContentConstructor;
 import it.hurts.sskirillss.relics.items.misc.ICreativeTabContent;
 import it.hurts.sskirillss.relics.items.relics.base.data.loot.LootTemplate;
-import it.hurts.sskirillss.relics.items.relics.base.data.loot.misc.LootEntries;
 import it.hurts.sskirillss.relics.utils.MathUtils;
 import it.hurts.sskirillss.relics.utils.ParticleUtils;
 import net.minecraft.client.Minecraft;
@@ -51,7 +50,6 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.CalculatePlayerTurnEvent;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.MovementInputUpdateEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
@@ -267,6 +265,26 @@ public class SlicerItem extends ExtendedSwordItem implements IRelicItem, ICreati
 
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+        if (level.isClientSide()) {
+            var minecraft = Minecraft.getInstance();
+
+            if (!(entity instanceof Player player) || minecraft.player != player || minecraft.level == null)
+                return;
+
+            if (!stack.getOrDefault(RISASDataComponents.SLICER_ACTIVE.get(), false))
+                return;
+
+            var state = stack.get(RISASDataComponents.SLICER_STATE.get());
+
+            if (state == null || !state.level().equals(minecraft.level.dimension()))
+                return;
+
+            player.setDeltaMovement(Vec3.ZERO);
+            player.fallDistance = 0F;
+            player.hurtMarked = true;
+            return;
+        }
+
         if (!(entity instanceof ServerPlayer player))
             return;
 
@@ -318,7 +336,7 @@ public class SlicerItem extends ExtendedSwordItem implements IRelicItem, ICreati
         }
 
         if (player.getMainHandItem() == stack && bladeAbility.canPlayerUse(player)) {
-            var damage = Math.max(0D, bladeAbility.getStatData("weapon_damage").getValue());
+            var damage = Math.max(0D, Math.round(bladeAbility.getStatData("weapon_damage").getValue()));
             var attackSpeed = Math.max(0D, bladeAbility.getStatData("weapon_attack_speed").getValue());
             var desired = SwordItem.createAttributes(Tiers.NETHERITE, (float) Math.max(-Tiers.NETHERITE.getAttackDamageBonus(), damage - 1D - Tiers.NETHERITE.getAttackDamageBonus()), (float) (attackSpeed - 4D));
 
@@ -372,17 +390,21 @@ public class SlicerItem extends ExtendedSwordItem implements IRelicItem, ICreati
             player.addEffect(new MobEffectInstance(MobEffectRegistry.TRUE_INVISIBILITY, 15, 0, false, false, true));
         }
 
-        if (serverLevel.getGameTime() % 2L == 0L) {
-            var outline = ParticleUtils.constructSimpleSpark(new Color(176, 32, 52), 0.5F, 1, 1F);
-            var points = Math.max(48, (int) Math.round(state.radius() * 32D));
+        var outline = ParticleUtils.constructSimpleSpark(new Color(176, 32, 52), 1F, 1, 1F);
+        var points = Math.max(64, (int) Math.round(state.radius() * 40D));
 
-            for (var point = 0; point < points; point++) {
-                var angle = (Math.PI * 2D * point) / points;
-                var x = state.centerX() + Math.cos(angle) * state.radius();
-                var z = state.centerZ() + Math.sin(angle) * state.radius();
+        var time = player.tickCount * 0.25D;
 
-                serverLevel.sendParticles(outline, x, state.centerY() + 0.15D, z, 2, 0.03D, 0.02D, 0.03D, 0D);
-            }
+        for (var point = 0; point < points; point++) {
+            var angle = (Math.PI * 2D * point) / points;
+
+            var wave = Math.sin(angle * 6 + time) * 0.35D;
+            var radius = state.radius() + wave;
+
+            var x = state.centerX() + Math.cos(angle) * radius;
+            var z = state.centerZ() + Math.sin(angle) * radius;
+
+            serverLevel.sendParticles(outline, x, state.centerY() + 0.15D, z, 1, 0.01D, 0.01D, 0.01D, 0D);
         }
 
         if (serverLevel.getGameTime() < state.nextActionTick())
@@ -485,15 +507,16 @@ public class SlicerItem extends ExtendedSwordItem implements IRelicItem, ICreati
         var currentPosition = player.position().add(0D, player.getBbHeight() * 0.5D, 0D);
 
         if (currentPosition.distanceToSqr(previousPosition) > 0.01D) {
-            var trailParticle = ParticleUtils.constructSimpleSpark(new Color(204, 28, 42), 0.38F, 6, 1F);
             var distance = previousPosition.distanceTo(currentPosition);
-            var steps = Math.max(10, (int) Math.ceil(distance * 8D));
+            var steps = Math.max(10, (int) Math.ceil(distance * 20D));
 
             for (var step = 0; step <= steps; step++) {
+                var trailParticle = ParticleUtils.constructSimpleSpark(new Color(204, 28, 42), 0.5F, state.intervalTicks() * 3 + level.random.nextInt(60), 0.975F);
+
                 var progress = (double) step / (double) steps;
                 var point = previousPosition.lerp(currentPosition, progress);
 
-                serverLevel.sendParticles(trailParticle, point.x, point.y, point.z, 1, 0.01D, 0.01D, 0.01D, 0D);
+                serverLevel.sendParticles(trailParticle, point.x, point.y, point.z, 1, 0,0,0, 0.0025D);
             }
         }
 
@@ -624,16 +647,20 @@ public class SlicerItem extends ExtendedSwordItem implements IRelicItem, ICreati
                 }
             }
 
-            if (Math.max(player.getAttackStrengthScale(0F), player.getAttackStrengthScale(0.5F)) >= 0.99F)
+            var fullyCharged = Math.max(player.getAttackStrengthScale(0F), player.getAttackStrengthScale(0.5F)) >= 0.99F;
+
+            if (fullyCharged)
                 relicData.getLevelingData().addExperience("slicer_weapon", "fully_charged_attack", 1D);
 
-            var previousCharges = charges;
-            charges = Math.min(maxCharges, charges + 1);
-            var gainedCharges = Math.max(0, charges - previousCharges);
+            if (fullyCharged) {
+                var previousCharges = charges;
+                charges = Math.min(maxCharges, charges + 1);
+                var gainedCharges = Math.max(0, charges - previousCharges);
 
-            if (gainedCharges > 0) {
-                ability.getStatisticData().getMetricData("charges_accumulated").addValue(gainedCharges);
-                relicData.getLevelingData().addExperience("slicer_weapon", "gained_stack", gainedCharges);
+                if (gainedCharges > 0) {
+                    ability.getStatisticData().getMetricData("charges_accumulated").addValue(gainedCharges);
+                    relicData.getLevelingData().addExperience("slicer_weapon", "gained_stack", gainedCharges);
+                }
             }
 
             var damage = Math.max(0D, event.getNewDamage());
@@ -648,8 +675,10 @@ public class SlicerItem extends ExtendedSwordItem implements IRelicItem, ICreati
             event.setNewDamage((float) Math.max(0D, damage));
 
             stack.set(RISASDataComponents.SLICER_BLADE_CHARGES.get(), charges);
-            stack.set(RISASDataComponents.SLICER_BLADE_WINDOW_UNTIL.get(), gameTime + windowTicks);
-            stack.remove(RISASDataComponents.SLICER_BLADE_DECAY_AT.get());
+            if (fullyCharged) {
+                stack.set(RISASDataComponents.SLICER_BLADE_WINDOW_UNTIL.get(), gameTime + windowTicks);
+                stack.remove(RISASDataComponents.SLICER_BLADE_DECAY_AT.get());
+            }
         }
 
         @SubscribeEvent
@@ -757,32 +786,6 @@ public class SlicerItem extends ExtendedSwordItem implements IRelicItem, ICreati
 
     @EventBusSubscriber(modid = ReliquifiedIronsSpellsAndSpellbooks.MODID, value = Dist.CLIENT)
     public static class ClientEvents {
-        @SubscribeEvent
-        public static void onClientTick(ClientTickEvent.Post event) {
-            var minecraft = Minecraft.getInstance();
-            var player = minecraft.player;
-
-            if (player == null || minecraft.level == null)
-                return;
-
-            var stack = player.getMainHandItem();
-
-            if (!(stack.getItem() instanceof SlicerItem))
-                return;
-
-            if (!stack.getOrDefault(RISASDataComponents.SLICER_ACTIVE.get(), false))
-                return;
-
-            var state = stack.get(RISASDataComponents.SLICER_STATE.get());
-
-            if (state == null || !state.level().equals(minecraft.level.dimension()))
-                return;
-
-            player.setDeltaMovement(Vec3.ZERO);
-            player.fallDistance = 0F;
-            player.hurtMarked = true;
-        }
-
         @SubscribeEvent
         public static void onMovementInputUpdate(MovementInputUpdateEvent event) {
             var minecraft = Minecraft.getInstance();

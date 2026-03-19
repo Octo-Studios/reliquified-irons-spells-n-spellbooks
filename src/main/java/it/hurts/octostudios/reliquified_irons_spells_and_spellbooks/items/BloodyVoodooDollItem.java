@@ -1,6 +1,7 @@
 package it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.items;
 
 import io.redspace.ironsspellbooks.damage.DamageSources;
+import io.redspace.ironsspellbooks.damage.SpellDamageSource;
 import io.redspace.ironsspellbooks.entity.spells.blood_needle.BloodNeedle;
 import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.ReliquifiedIronsSpellsAndSpellbooks;
 import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.init.RISASItems;
@@ -31,6 +32,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import top.theillusivec4.curios.api.SlotContext;
 
 import java.util.ArrayList;
@@ -52,8 +54,8 @@ public class BloodyVoodooDollItem extends ISASRelic {
                                         .formatValue(value -> (int) MathUtils.round(value * 100D, 0))
                                         .build())
                                 .stat(AbilityStatTemplate.builder("needle_damage")
-                                        .initialValue(1D, 3D)
-                                        .upgradeModifier(RelicsScalingModels.MULTIPLICATIVE_BASE.get(), 0.0667D)
+                                        .initialValue(0.5D, 1.5D)
+                                        .upgradeModifier(RelicsScalingModels.MULTIPLICATIVE_BASE.get(), 0.0286D)
                                         .formatValue(value -> MathUtils.round(value, 2))
                                         .build())
                                 .stat(AbilityStatTemplate.builder("max_needles")
@@ -80,6 +82,11 @@ public class BloodyVoodooDollItem extends ISASRelic {
                                         .initialValue(3D, 5D)
                                         .upgradeModifier(RelicsScalingModels.MULTIPLICATIVE_BASE.get(), 0.1143D)
                                         .formatValue(value -> Math.max(1, (int) MathUtils.round(value, 0)))
+                                        .build())
+                                .stat(AbilityStatTemplate.builder("death_burst_multicast_chance")
+                                        .initialValue(0.25D, 0.5D)
+                                        .upgradeModifier(RelicsScalingModels.MULTIPLICATIVE_BASE.get(), 0.0229D)
+                                        .formatValue(value -> (int) MathUtils.round(value * 100D, 0))
                                         .build())
                                 .experienceSources(ExperienceSourcesTemplate.builder()
                                         .source(ExperienceSourceTemplate.builder("marked_target").build())
@@ -258,6 +265,18 @@ public class BloodyVoodooDollItem extends ISASRelic {
     @EventBusSubscriber(modid = ReliquifiedIronsSpellsAndSpellbooks.MODID)
     public static class CommonEvents {
         @SubscribeEvent
+        public static void onVoodooNeedleIncomingDamage(LivingIncomingDamageEvent event) {
+            if (!(event.getSource().getDirectEntity() instanceof BloodNeedle needle))
+                return;
+
+            if (!needle.getPersistentData().getBoolean("risas_voodoo_needle"))
+                return;
+
+            if (event.getSource() instanceof SpellDamageSource source && source.getLifestealPercent() > 0F)
+                source.setLifestealPercent(0F);
+        }
+
+        @SubscribeEvent
         public static void onLivingDamagePost(LivingDamageEvent.Post event) {
             if (!(event.getEntity().level() instanceof ServerLevel level) || event.getNewDamage() <= 0F)
                 return;
@@ -332,6 +351,8 @@ public class BloodyVoodooDollItem extends ISASRelic {
 
                     if (ability.isRankModifierUnlocked("needle_leech")) {
                         var heal = Math.max(0D, ability.getStatData("needle_heal").getValue());
+
+                        heal = 1;
 
                         if (heal > 0D) {
                             var healthBefore = owner.getHealth();
@@ -486,26 +507,24 @@ public class BloodyVoodooDollItem extends ISASRelic {
                 if (ability != null && bestNeedles > 0D) {
                     var relicData = relic.getRelicData(owner, stack);
                     var maxNeedles = Math.max(1, (int) Math.round(bestNeedles));
-                    var burstNeedles = Math.max(1, MathUtils.multicast(level.getRandom(), 0.5D, maxNeedles));
+                    var burstNeedles = Math.max(1, MathUtils.multicast(level.getRandom(), Mth.clamp(ability.getStatData("death_burst_multicast_chance").getValue(), 0D, 1D), maxNeedles));
                     var center = event.getEntity().position().add(0D, event.getEntity().getEyeHeight() / 2F, 0D);
                     var damage = Math.max(0F, needle.getDamage());
-                    var spawnedNeedles = 0;
 
                     if (damage > 0F) {
                         for (var i = 0; i < burstNeedles; i++) {
+                            var angle = level.getRandom().nextDouble() * Math.PI * 2D;
+                            var side = 0.2D + level.getRandom().nextDouble() * 0.2D;
                             var direction = new Vec3(
-                                    level.getRandom().nextDouble() - 0.5D,
-                                    level.getRandom().nextDouble() - 0.2D,
-                                    level.getRandom().nextDouble() - 0.5D
+                                    Math.cos(angle) * side,
+                                    0.2D + level.getRandom().nextDouble() * 0.2D,
+                                    Math.sin(angle) * side
                             );
-
-                            if (direction.lengthSqr() <= 1.0E-6D)
-                                direction = new Vec3(0D, 0.2D, 0D);
 
                             var burst = new BloodNeedle(level, owner);
 
                             burst.moveTo(center);
-                            burst.shoot(direction.normalize().scale(0.15D));
+                            burst.shoot(direction.normalize().scale(0.18D));
                             burst.setDamage(damage);
                             burst.setScale(needle.getScale());
                             burst.getPersistentData().putBoolean("risas_voodoo_needle", true);
@@ -513,7 +532,6 @@ public class BloodyVoodooDollItem extends ISASRelic {
                             level.addFreshEntity(burst);
                             ability.getStatisticData().getMetricData("needles_summoned").addValue(1D);
                             relicData.getLevelingData().addExperience("voodoo_mark", "summoned_needle", 1D);
-                            spawnedNeedles++;
                         }
                     }
 
@@ -598,4 +616,3 @@ public class BloodyVoodooDollItem extends ISASRelic {
 
     }
 }
-
