@@ -10,6 +10,7 @@ import io.redspace.ironsspellbooks.registries.MobEffectRegistry;
 import io.redspace.ironsspellbooks.spells.ender.TeleportSpell;
 import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.ReliquifiedIronsSpellsAndSpellbooks;
 import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.init.RISASDataComponents;
+import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.items.misc.RISASLootEntries;
 import it.hurts.sskirillss.relics.api.relics.AbilityMetricTemplate;
 import it.hurts.sskirillss.relics.api.relics.AbilityStatisticTemplate;
 import it.hurts.sskirillss.relics.api.relics.IRelicItem;
@@ -159,7 +160,7 @@ public class SlicerItem extends ExtendedSwordItem implements IRelicItem, ICreati
                                 .build())
                         .build())
                 .loot(LootTemplate.builder()
-                        .entry(LootEntries.CAVE, LootEntries.FOREST)
+                        .entry(RISASLootEntries.ANY_STRUCTURE)
                         .build())
                 .build();
     }

@@ -3,8 +3,9 @@ package it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.items;
 import io.redspace.ironsspellbooks.api.registry.SpellRegistry;
 import io.redspace.ironsspellbooks.damage.DamageSources;
 import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.ReliquifiedIronsSpellsAndSpellbooks;
-import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.init.ItemRegistry;
+import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.init.RISASItems;
 import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.init.RISASDataComponents;
+import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.items.misc.RISASLootEntries;
 import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.network.payload.MaskOfHungerBeamPayload;
 import it.hurts.sskirillss.relics.api.relics.AbilityMetricTemplate;
 import it.hurts.sskirillss.relics.api.relics.AbilityStatisticTemplate;
@@ -19,7 +20,6 @@ import it.hurts.sskirillss.relics.api.relics.data.AbilityData;
 import it.hurts.sskirillss.relics.init.RelicsMobEffects;
 import it.hurts.sskirillss.relics.init.RelicsScalingModels;
 import it.hurts.sskirillss.relics.items.relics.base.data.loot.LootTemplate;
-import it.hurts.sskirillss.relics.items.relics.base.data.loot.misc.LootEntries;
 import it.hurts.sskirillss.relics.utils.EntityUtils;
 import it.hurts.sskirillss.relics.utils.MathUtils;
 import net.minecraft.server.level.ServerPlayer;
@@ -105,7 +105,7 @@ public class MaskOfHungerItem extends ISASRelic {
                                 .build())
                         .build())
                 .loot(LootTemplate.builder()
-                        .entry(LootEntries.SWAMP, LootEntries.CAVE)
+                        .entry(RISASLootEntries.ANY_STRUCTURE)
                         .build())
                 .build();
     }
@@ -128,7 +128,7 @@ public class MaskOfHungerItem extends ISASRelic {
             var bestTargets = -1;
             var bestCooldown = Double.MAX_VALUE;
 
-            for (var candidateStack : EntityUtils.findEquippedCurios(player, ItemRegistry.MASK_OF_HUNGER.value())) {
+            for (var candidateStack : EntityUtils.findEquippedCurios(player, RISASItems.MASK_OF_HUNGER.value())) {
                 if (!(candidateStack.getItem() instanceof MaskOfHungerItem candidateItem))
                     continue;
 

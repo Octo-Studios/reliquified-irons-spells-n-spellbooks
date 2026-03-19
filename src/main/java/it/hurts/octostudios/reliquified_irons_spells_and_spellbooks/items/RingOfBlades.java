@@ -3,7 +3,8 @@ package it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.items;
 import io.redspace.ironsspellbooks.entity.spells.blood_slash.BloodSlashProjectile;
 import io.redspace.ironsspellbooks.registries.SoundRegistry;
 import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.ReliquifiedIronsSpellsAndSpellbooks;
-import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.init.ItemRegistry;
+import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.init.RISASItems;
+import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.items.misc.RISASLootEntries;
 import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.network.payload.RingOfBladesAirSwingPayload;
 import it.hurts.sskirillss.relics.api.relics.AbilityMetricTemplate;
 import it.hurts.sskirillss.relics.api.relics.AbilityStatisticTemplate;
@@ -17,7 +18,6 @@ import it.hurts.sskirillss.relics.api.relics.abilities.stats.AbilityStatTemplate
 import it.hurts.sskirillss.relics.api.relics.data.AbilityData;
 import it.hurts.sskirillss.relics.init.RelicsScalingModels;
 import it.hurts.sskirillss.relics.items.relics.base.data.loot.LootTemplate;
-import it.hurts.sskirillss.relics.items.relics.base.data.loot.misc.LootEntries;
 import it.hurts.sskirillss.relics.utils.EntityUtils;
 import it.hurts.sskirillss.relics.utils.MathUtils;
 import net.minecraft.server.level.ServerLevel;
@@ -93,7 +93,7 @@ public class RingOfBlades extends ISASRelic {
                                 .build())
                         .build())
                 .loot(LootTemplate.builder()
-                        .entry(LootEntries.CAVE, LootEntries.FOREST)
+                        .entry(RISASLootEntries.ANY_STRUCTURE)
                         .build())
                 .build();
     }
@@ -264,7 +264,7 @@ public class RingOfBlades extends ISASRelic {
             var highestDamage = -1D;
             ActiveRelic bestRelic = null;
 
-            for (var stack : EntityUtils.findEquippedCurios(player, ItemRegistry.RING_OF_BLADES.value())) {
+            for (var stack : EntityUtils.findEquippedCurios(player, RISASItems.RING_OF_BLADES.value())) {
                 if (!(stack.getItem() instanceof RingOfBlades relic))
                     continue;
 

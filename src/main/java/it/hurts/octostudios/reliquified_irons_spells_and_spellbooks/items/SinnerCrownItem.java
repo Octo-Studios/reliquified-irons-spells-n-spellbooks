@@ -10,8 +10,9 @@ import io.redspace.ironsspellbooks.particle.BlastwaveParticleOptions;
 import io.redspace.ironsspellbooks.registries.SoundRegistry;
 import io.redspace.ironsspellbooks.util.ParticleHelper;
 import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.ReliquifiedIronsSpellsAndSpellbooks;
-import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.init.ItemRegistry;
+import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.init.RISASItems;
 import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.init.RISASDataComponents;
+import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.items.misc.RISASLootEntries;
 import it.hurts.sskirillss.relics.api.relics.AbilityMetricTemplate;
 import it.hurts.sskirillss.relics.api.relics.AbilityStatisticTemplate;
 import it.hurts.sskirillss.relics.api.relics.RelicTemplate;
@@ -23,7 +24,6 @@ import it.hurts.sskirillss.relics.api.relics.abilities.ExperienceSourcesTemplate
 import it.hurts.sskirillss.relics.api.relics.abilities.stats.AbilityStatTemplate;
 import it.hurts.sskirillss.relics.init.RelicsScalingModels;
 import it.hurts.sskirillss.relics.items.relics.base.data.loot.LootTemplate;
-import it.hurts.sskirillss.relics.items.relics.base.data.loot.misc.LootEntries;
 import it.hurts.sskirillss.relics.utils.EntityUtils;
 import it.hurts.sskirillss.relics.utils.MathUtils;
 import net.minecraft.server.level.ServerLevel;
@@ -98,7 +98,7 @@ public class SinnerCrownItem extends ISASRelic {
                                 .build())
                         .build())
                 .loot(LootTemplate.builder()
-                        .entry(LootEntries.CAVE, LootEntries.SWAMP)
+                        .entry(RISASLootEntries.ANY_STRUCTURE)
                         .build())
                 .build();
     }
@@ -193,7 +193,7 @@ public class SinnerCrownItem extends ISASRelic {
                 if (Math.abs(width - 0.6F) <= 0.25F && Math.abs(height - 1.8F) <= 0.5F) {
                     var gameTime = level.getGameTime();
 
-                    for (var stack : EntityUtils.findEquippedCurios(killer, ItemRegistry.SINNER_CROWN.value())) {
+                    for (var stack : EntityUtils.findEquippedCurios(killer, RISASItems.SINNER_CROWN.value())) {
                         if (!(stack.getItem() instanceof SinnerCrownItem crown))
                             continue;
 
@@ -299,7 +299,7 @@ public class SinnerCrownItem extends ISASRelic {
             var players = level.getServer().getPlayerList().getPlayers();
 
             for (var player : players) {
-                for (var stack : EntityUtils.findEquippedCurios(player, ItemRegistry.SINNER_CROWN.value())) {
+                for (var stack : EntityUtils.findEquippedCurios(player, RISASItems.SINNER_CROWN.value())) {
                     if (!(stack.getItem() instanceof SinnerCrownItem crown))
                         continue;
 
@@ -352,7 +352,7 @@ public class SinnerCrownItem extends ISASRelic {
             if (owner == null)
                 return;
 
-            for (var stack : EntityUtils.findEquippedCurios(owner, ItemRegistry.SINNER_CROWN.value())) {
+            for (var stack : EntityUtils.findEquippedCurios(owner, RISASItems.SINNER_CROWN.value())) {
                 if (!(stack.getItem() instanceof SinnerCrownItem crown))
                     continue;
 
@@ -389,7 +389,7 @@ public class SinnerCrownItem extends ISASRelic {
             ItemStack bestStack = ItemStack.EMPTY;
             SinnerCrownItem bestCrown = null;
 
-            for (var stack : EntityUtils.findEquippedCurios(player, ItemRegistry.SINNER_CROWN.value())) {
+            for (var stack : EntityUtils.findEquippedCurios(player, RISASItems.SINNER_CROWN.value())) {
                 if (!(stack.getItem() instanceof SinnerCrownItem crown))
                     continue;
 
@@ -522,7 +522,7 @@ public class SinnerCrownItem extends ISASRelic {
                 return;
             }
 
-            if (EntityUtils.findEquippedCurios(owner, ItemRegistry.SINNER_CROWN.value()).isEmpty())
+            if (EntityUtils.findEquippedCurios(owner, RISASItems.SINNER_CROWN.value()).isEmpty())
                 summon.discard();
         }
 
@@ -546,7 +546,7 @@ public class SinnerCrownItem extends ISASRelic {
                 }
             }
 
-            for (var stack : EntityUtils.findEquippedCurios(player, ItemRegistry.SINNER_CROWN.value())) {
+            for (var stack : EntityUtils.findEquippedCurios(player, RISASItems.SINNER_CROWN.value())) {
                 if (stack.getItem() instanceof SinnerCrownItem)
                     setSummons(stack, List.of());
             }

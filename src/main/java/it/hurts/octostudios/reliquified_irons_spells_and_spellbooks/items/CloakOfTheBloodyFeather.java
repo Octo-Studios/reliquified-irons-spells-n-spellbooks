@@ -2,8 +2,9 @@ package it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.items;
 
 import io.redspace.ironsspellbooks.entity.spells.blood_needle.BloodNeedle;
 import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.ReliquifiedIronsSpellsAndSpellbooks;
-import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.init.ItemRegistry;
+import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.init.RISASItems;
 import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.init.RISASDataComponents;
+import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.items.misc.RISASLootEntries;
 import it.hurts.sskirillss.relics.api.relics.AbilityMetricTemplate;
 import it.hurts.sskirillss.relics.api.relics.AbilityStatisticTemplate;
 import it.hurts.sskirillss.relics.api.relics.RelicTemplate;
@@ -17,7 +18,6 @@ import it.hurts.sskirillss.relics.api.relics.data.AbilityData;
 import it.hurts.sskirillss.relics.init.RelicsMobEffects;
 import it.hurts.sskirillss.relics.init.RelicsScalingModels;
 import it.hurts.sskirillss.relics.items.relics.base.data.loot.LootTemplate;
-import it.hurts.sskirillss.relics.items.relics.base.data.loot.misc.LootEntries;
 import it.hurts.sskirillss.relics.utils.EntityUtils;
 import it.hurts.sskirillss.relics.utils.MathUtils;
 import net.minecraft.resources.ResourceKey;
@@ -97,7 +97,7 @@ public class CloakOfTheBloodyFeather extends ISASRelic {
                                 .build())
                         .build())
                 .loot(LootTemplate.builder()
-                        .entry(LootEntries.FOREST, LootEntries.CAVE)
+                        .entry(RISASLootEntries.ANY_STRUCTURE)
                         .build())
                 .build();
     }
@@ -192,7 +192,7 @@ public class CloakOfTheBloodyFeather extends ISASRelic {
                 AbilityData bestAbility = null;
                 var bestDamage = -1D;
 
-                for (var stack : EntityUtils.findEquippedCurios(owner, ItemRegistry.CLOAK_OF_THE_BLOODY_FEATHER.value())) {
+                for (var stack : EntityUtils.findEquippedCurios(owner, RISASItems.CLOAK_OF_THE_BLOODY_FEATHER.value())) {
                     if (!(stack.getItem() instanceof CloakOfTheBloodyFeather relic))
                         continue;
 
@@ -244,7 +244,7 @@ public class CloakOfTheBloodyFeather extends ISASRelic {
             if (!(event.getEntity() instanceof ServerPlayer player))
                 return;
 
-            for (var stack : EntityUtils.findEquippedCurios(player, ItemRegistry.CLOAK_OF_THE_BLOODY_FEATHER.value())) {
+            for (var stack : EntityUtils.findEquippedCurios(player, RISASItems.CLOAK_OF_THE_BLOODY_FEATHER.value())) {
                 if (!(stack.getItem() instanceof CloakOfTheBloodyFeather relic))
                     continue;
 
@@ -274,7 +274,7 @@ public class CloakOfTheBloodyFeather extends ISASRelic {
                 AbilityData bestAbility = null;
                 var bestHeal = -1D;
 
-                for (var stack : EntityUtils.findEquippedCurios(owner, ItemRegistry.CLOAK_OF_THE_BLOODY_FEATHER.value())) {
+                for (var stack : EntityUtils.findEquippedCurios(owner, RISASItems.CLOAK_OF_THE_BLOODY_FEATHER.value())) {
                     if (!(stack.getItem() instanceof CloakOfTheBloodyFeather relic))
                         continue;
 
@@ -306,7 +306,7 @@ public class CloakOfTheBloodyFeather extends ISASRelic {
             if (!(event.getEntity() instanceof Player player))
                 return;
 
-            for (var stack : EntityUtils.findEquippedCurios(player, ItemRegistry.CLOAK_OF_THE_BLOODY_FEATHER.value())) {
+            for (var stack : EntityUtils.findEquippedCurios(player, RISASItems.CLOAK_OF_THE_BLOODY_FEATHER.value())) {
                 if (stack.getItem() instanceof CloakOfTheBloodyFeather)
                     clearBuffer(stack);
             }

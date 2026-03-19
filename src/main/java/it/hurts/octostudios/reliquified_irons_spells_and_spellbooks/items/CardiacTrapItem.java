@@ -4,8 +4,9 @@ import io.redspace.ironsspellbooks.api.magic.MagicData;
 import io.redspace.ironsspellbooks.damage.DamageSources;
 import io.redspace.ironsspellbooks.registries.MobEffectRegistry;
 import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.ReliquifiedIronsSpellsAndSpellbooks;
-import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.init.ItemRegistry;
+import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.init.RISASItems;
 import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.init.RISASDataComponents;
+import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.items.misc.RISASLootEntries;
 import it.hurts.sskirillss.relics.api.relics.AbilityMetricTemplate;
 import it.hurts.sskirillss.relics.api.relics.AbilityStatisticTemplate;
 import it.hurts.sskirillss.relics.api.relics.RelicTemplate;
@@ -19,7 +20,6 @@ import it.hurts.sskirillss.relics.api.relics.data.AbilityData;
 import it.hurts.sskirillss.relics.init.RelicsMobEffects;
 import it.hurts.sskirillss.relics.init.RelicsScalingModels;
 import it.hurts.sskirillss.relics.items.relics.base.data.loot.LootTemplate;
-import it.hurts.sskirillss.relics.items.relics.base.data.loot.misc.LootEntries;
 import it.hurts.sskirillss.relics.utils.EntityUtils;
 import it.hurts.sskirillss.relics.utils.MathUtils;
 import net.minecraft.server.level.ServerPlayer;
@@ -104,7 +104,7 @@ public class CardiacTrapItem extends ISASRelic {
                                 .build())
                         .build())
                 .loot(LootTemplate.builder()
-                        .entry(LootEntries.CAVE, LootEntries.SWAMP)
+                        .entry(RISASLootEntries.ANY_STRUCTURE)
                         .build())
                 .build();
     }
@@ -156,7 +156,7 @@ public class CardiacTrapItem extends ISASRelic {
 
             var gameTime = player.level().getGameTime();
 
-            for (var candidateStack : EntityUtils.findEquippedCurios(player, ItemRegistry.CARDIAC_TRAP.value())) {
+            for (var candidateStack : EntityUtils.findEquippedCurios(player, RISASItems.CARDIAC_TRAP.value())) {
                 if (candidateStack.getOrDefault(RISASDataComponents.cardiac_trap_HEARTSTOP_UNTIL.get(), 0L) > gameTime)
                     return;
 
@@ -173,7 +173,7 @@ public class CardiacTrapItem extends ISASRelic {
             var bestDuration = -1D;
             var bestCooldown = Double.MAX_VALUE;
 
-            for (var candidateStack : EntityUtils.findEquippedCurios(player, ItemRegistry.CARDIAC_TRAP.value())) {
+            for (var candidateStack : EntityUtils.findEquippedCurios(player, RISASItems.CARDIAC_TRAP.value())) {
                 if (!(candidateStack.getItem() instanceof CardiacTrapItem candidateItem))
                     continue;
 
@@ -272,7 +272,7 @@ public class CardiacTrapItem extends ISASRelic {
             ItemStack bestStack = ItemStack.EMPTY;
             AbilityData bestAbility = null;
 
-            for (var stack : EntityUtils.findEquippedCurios(player, ItemRegistry.CARDIAC_TRAP.value())) {
+            for (var stack : EntityUtils.findEquippedCurios(player, RISASItems.CARDIAC_TRAP.value())) {
                 if (!(stack.getItem() instanceof CardiacTrapItem item))
                     continue;
 

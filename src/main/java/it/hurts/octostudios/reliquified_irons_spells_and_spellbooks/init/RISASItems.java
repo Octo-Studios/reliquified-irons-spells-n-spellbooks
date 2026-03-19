@@ -9,7 +9,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-public class ItemRegistry {
+public class RISASItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(BuiltInRegistries.ITEM, ReliquifiedIronsSpellsAndSpellbooks.MODID);
 
     public static final DeferredHolder<Item, BloodyVoodooDollItem> BLOODY_VOODOO_DOLL = ITEMS.register("bloody_voodoo_doll", BloodyVoodooDollItem::new);

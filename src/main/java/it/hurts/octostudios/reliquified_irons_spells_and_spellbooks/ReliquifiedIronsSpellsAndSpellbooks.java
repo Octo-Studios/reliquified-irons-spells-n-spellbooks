@@ -1,7 +1,7 @@
 package it.hurts.octostudios.reliquified_irons_spells_and_spellbooks;
 
-import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.init.EntityRegistry;
-import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.init.ItemRegistry;
+import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.init.RISASEntities;
+import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.init.RISASItems;
 import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.init.RISASDataComponents;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
@@ -14,8 +14,8 @@ public class ReliquifiedIronsSpellsAndSpellbooks {
     public ReliquifiedIronsSpellsAndSpellbooks(IEventBus bus) {
         bus.addListener(this::setupCommon);
 
-        ItemRegistry.register(bus);
-        EntityRegistry.register(bus);
+        RISASItems.register(bus);
+        RISASEntities.register(bus);
         RISASDataComponents.register(bus);
     }
 

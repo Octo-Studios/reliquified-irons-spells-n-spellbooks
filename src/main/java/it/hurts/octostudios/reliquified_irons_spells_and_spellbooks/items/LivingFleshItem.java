@@ -2,8 +2,9 @@ package it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.items;
 
 import io.redspace.ironsspellbooks.entity.spells.devour_jaw.DevourJaw;
 import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.ReliquifiedIronsSpellsAndSpellbooks;
-import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.init.ItemRegistry;
+import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.init.RISASItems;
 import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.init.RISASDataComponents;
+import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.items.misc.RISASLootEntries;
 import it.hurts.sskirillss.relics.api.relics.AbilityMetricTemplate;
 import it.hurts.sskirillss.relics.api.relics.AbilityStatisticTemplate;
 import it.hurts.sskirillss.relics.api.relics.RelicTemplate;
@@ -16,7 +17,6 @@ import it.hurts.sskirillss.relics.api.relics.abilities.stats.AbilityStatTemplate
 import it.hurts.sskirillss.relics.api.relics.data.AbilityData;
 import it.hurts.sskirillss.relics.init.RelicsScalingModels;
 import it.hurts.sskirillss.relics.items.relics.base.data.loot.LootTemplate;
-import it.hurts.sskirillss.relics.items.relics.base.data.loot.misc.LootEntries;
 import it.hurts.sskirillss.relics.utils.EntityUtils;
 import it.hurts.sskirillss.relics.utils.MathUtils;
 import net.minecraft.server.level.ServerLevel;
@@ -99,7 +99,7 @@ public class LivingFleshItem extends ISASRelic {
                                 .build())
                         .build())
                 .loot(LootTemplate.builder()
-                        .entry(LootEntries.SWAMP, LootEntries.CAVE)
+                        .entry(RISASLootEntries.ANY_STRUCTURE)
                         .build())
                 .build();
     }
@@ -230,7 +230,7 @@ public class LivingFleshItem extends ISASRelic {
                 AbilityData ability = null;
                 var bestDamage = -1D;
 
-                for (var candidateStack : EntityUtils.findEquippedCurios(caster, ItemRegistry.LIVING_FLESH.value())) {
+                for (var candidateStack : EntityUtils.findEquippedCurios(caster, RISASItems.LIVING_FLESH.value())) {
                     if (!(candidateStack.getItem() instanceof LivingFleshItem candidateRelic))
                         continue;
 
@@ -308,7 +308,7 @@ public class LivingFleshItem extends ISASRelic {
             var bestDamage = -1D;
             var bestDuration = -1L;
 
-            for (var candidateStack : EntityUtils.findEquippedCurios(attacker, ItemRegistry.LIVING_FLESH.value())) {
+            for (var candidateStack : EntityUtils.findEquippedCurios(attacker, RISASItems.LIVING_FLESH.value())) {
                 if (!(candidateStack.getItem() instanceof LivingFleshItem candidateRelic))
                     continue;
 
@@ -368,7 +368,7 @@ public class LivingFleshItem extends ISASRelic {
 
             setMarks(stack, marks);
 
-            for (var otherStack : EntityUtils.findEquippedCurios(attacker, ItemRegistry.LIVING_FLESH.value())) {
+            for (var otherStack : EntityUtils.findEquippedCurios(attacker, RISASItems.LIVING_FLESH.value())) {
                 if (otherStack == stack || !(otherStack.getItem() instanceof LivingFleshItem))
                     continue;
 
@@ -408,7 +408,7 @@ public class LivingFleshItem extends ISASRelic {
             var players = level.getServer().getPlayerList().getPlayers();
 
             for (var player : players) {
-                for (var stack : EntityUtils.findEquippedCurios(player, ItemRegistry.LIVING_FLESH.value())) {
+                for (var stack : EntityUtils.findEquippedCurios(player, RISASItems.LIVING_FLESH.value())) {
                     if (!(stack.getItem() instanceof LivingFleshItem))
                         continue;
 

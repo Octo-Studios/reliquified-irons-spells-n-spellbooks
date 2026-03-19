@@ -3,8 +3,9 @@ package it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.items;
 import io.redspace.ironsspellbooks.damage.DamageSources;
 import io.redspace.ironsspellbooks.entity.spells.blood_needle.BloodNeedle;
 import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.ReliquifiedIronsSpellsAndSpellbooks;
-import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.init.ItemRegistry;
+import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.init.RISASItems;
 import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.init.RISASDataComponents;
+import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.items.misc.RISASLootEntries;
 import it.hurts.sskirillss.relics.api.relics.AbilityMetricTemplate;
 import it.hurts.sskirillss.relics.api.relics.AbilityStatisticTemplate;
 import it.hurts.sskirillss.relics.api.relics.RelicTemplate;
@@ -17,7 +18,6 @@ import it.hurts.sskirillss.relics.api.relics.abilities.stats.AbilityStatTemplate
 import it.hurts.sskirillss.relics.api.relics.data.AbilityData;
 import it.hurts.sskirillss.relics.init.RelicsScalingModels;
 import it.hurts.sskirillss.relics.items.relics.base.data.loot.LootTemplate;
-import it.hurts.sskirillss.relics.items.relics.base.data.loot.misc.LootEntries;
 import it.hurts.sskirillss.relics.utils.EntityUtils;
 import it.hurts.sskirillss.relics.utils.MathUtils;
 import net.minecraft.server.level.ServerLevel;
@@ -110,7 +110,7 @@ public class BloodyVoodooDollItem extends ISASRelic {
                                 .build())
                         .build())
                 .loot(LootTemplate.builder()
-                        .entry(LootEntries.SWAMP, LootEntries.CAVE)
+                        .entry(RISASLootEntries.ANY_STRUCTURE)
                         .build())
                 .build();
     }
@@ -268,7 +268,7 @@ public class BloodyVoodooDollItem extends ISASRelic {
             var players = level.getServer().getPlayerList().getPlayers();
 
             for (var player : players) {
-                for (var stack : EntityUtils.findEquippedCurios(player, ItemRegistry.BLOODY_VOODOO_DOLL.value())) {
+                for (var stack : EntityUtils.findEquippedCurios(player, RISASItems.BLOODY_VOODOO_DOLL.value())) {
                     if (!(stack.getItem() instanceof BloodyVoodooDollItem))
                         continue;
 
@@ -306,7 +306,7 @@ public class BloodyVoodooDollItem extends ISASRelic {
                 ItemStack stack = ItemStack.EMPTY;
                 var bestNeedleDamage = -1D;
 
-                for (var candidateStack : EntityUtils.findEquippedCurios(owner, ItemRegistry.BLOODY_VOODOO_DOLL.value())) {
+                for (var candidateStack : EntityUtils.findEquippedCurios(owner, RISASItems.BLOODY_VOODOO_DOLL.value())) {
                     if (!(candidateStack.getItem() instanceof BloodyVoodooDollItem candidateRelic))
                         continue;
 
@@ -390,7 +390,7 @@ public class BloodyVoodooDollItem extends ISASRelic {
             if (!(source.getEntity() instanceof Player attacker) || attacker == target || source.getDirectEntity() instanceof BloodNeedle)
                 return;
 
-            for (var stack : EntityUtils.findEquippedCurios(attacker, ItemRegistry.BLOODY_VOODOO_DOLL.value())) {
+            for (var stack : EntityUtils.findEquippedCurios(attacker, RISASItems.BLOODY_VOODOO_DOLL.value())) {
                 if (!(stack.getItem() instanceof BloodyVoodooDollItem relic))
                     continue;
 
@@ -463,7 +463,7 @@ public class BloodyVoodooDollItem extends ISASRelic {
                 ItemStack stack = ItemStack.EMPTY;
                 var bestNeedles = -1D;
 
-                for (var candidateStack : EntityUtils.findEquippedCurios(owner, ItemRegistry.BLOODY_VOODOO_DOLL.value())) {
+                for (var candidateStack : EntityUtils.findEquippedCurios(owner, RISASItems.BLOODY_VOODOO_DOLL.value())) {
                     if (!(candidateStack.getItem() instanceof BloodyVoodooDollItem candidateRelic))
                         continue;
 
@@ -524,7 +524,7 @@ public class BloodyVoodooDollItem extends ISASRelic {
             var players = level.getServer().getPlayerList().getPlayers();
 
             for (var player : players) {
-                for (var stack : EntityUtils.findEquippedCurios(player, ItemRegistry.BLOODY_VOODOO_DOLL.value())) {
+                for (var stack : EntityUtils.findEquippedCurios(player, RISASItems.BLOODY_VOODOO_DOLL.value())) {
                     if (!(stack.getItem() instanceof BloodyVoodooDollItem))
                         continue;
 

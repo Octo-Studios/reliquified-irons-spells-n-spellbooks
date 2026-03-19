@@ -5,8 +5,9 @@ import io.redspace.ironsspellbooks.api.registry.SpellRegistry;
 import io.redspace.ironsspellbooks.api.spells.CastSource;
 import io.redspace.ironsspellbooks.spells.ender.TeleportSpell;
 import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.ReliquifiedIronsSpellsAndSpellbooks;
-import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.init.ItemRegistry;
+import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.init.RISASItems;
 import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.init.RISASDataComponents;
+import it.hurts.octostudios.reliquified_irons_spells_and_spellbooks.items.misc.RISASLootEntries;
 import it.hurts.sskirillss.relics.api.relics.AbilityMetricTemplate;
 import it.hurts.sskirillss.relics.api.relics.AbilityStatisticTemplate;
 import it.hurts.sskirillss.relics.api.relics.RelicTemplate;
@@ -19,7 +20,6 @@ import it.hurts.sskirillss.relics.api.relics.abilities.stats.AbilityStatTemplate
 import it.hurts.sskirillss.relics.api.relics.data.AbilityData;
 import it.hurts.sskirillss.relics.init.RelicsScalingModels;
 import it.hurts.sskirillss.relics.items.relics.base.data.loot.LootTemplate;
-import it.hurts.sskirillss.relics.items.relics.base.data.loot.misc.LootEntries;
 import it.hurts.sskirillss.relics.utils.EntityUtils;
 import it.hurts.sskirillss.relics.utils.MathUtils;
 import net.minecraft.core.BlockPos;
@@ -96,7 +96,7 @@ public class FlaskOfTheRedMistItem extends ISASRelic {
                                 .build())
                         .build())
                 .loot(LootTemplate.builder()
-                        .entry(LootEntries.SWAMP, LootEntries.CAVE)
+                        .entry(RISASLootEntries.ANY_STRUCTURE)
                         .build())
                 .build();
     }
@@ -120,7 +120,7 @@ public class FlaskOfTheRedMistItem extends ISASRelic {
             AbilityData ability = null;
             var bestCooldown = Double.MAX_VALUE;
 
-            for (var candidateStack : EntityUtils.findEquippedCurios(player, ItemRegistry.FLASK_OF_THE_RED_MIST.value())) {
+            for (var candidateStack : EntityUtils.findEquippedCurios(player, RISASItems.FLASK_OF_THE_RED_MIST.value())) {
                 if (!(candidateStack.getItem() instanceof FlaskOfTheRedMistItem candidateItem))
                     continue;
 
@@ -219,7 +219,7 @@ public class FlaskOfTheRedMistItem extends ISASRelic {
             AbilityData ability = null;
             var bestBonus = -1D;
 
-            for (var candidateStack : EntityUtils.findEquippedCurios(player, ItemRegistry.FLASK_OF_THE_RED_MIST.value())) {
+            for (var candidateStack : EntityUtils.findEquippedCurios(player, RISASItems.FLASK_OF_THE_RED_MIST.value())) {
                 if (!(candidateStack.getItem() instanceof FlaskOfTheRedMistItem candidateItem))
                     continue;
 
