@@ -4,6 +4,8 @@ import io.redspace.ironsspellbooks.entity.spells.devour_jaw.DevourJaw;
 import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.ReliquifiedIronsSpellsAndSpellbooks;
 import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.init.RISASItems;
 import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.init.RISASDataComponents;
+import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.items.base.ISASRelicItem;
+import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.items.base.ISASWearableRelicItem;
 import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.items.misc.RISASLootEntries;
 import it.hurts.sskirillss.relics.api.relics.AbilityMetricTemplate;
 import it.hurts.sskirillss.relics.api.relics.AbilityStatisticTemplate;
@@ -36,13 +38,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
-public class LivingFleshItem extends ISASRelic {
+public class LivingFleshItem extends ISASWearableRelicItem {
     @Override
     public RelicTemplate constructDefaultRelicTemplate() {
         return RelicTemplate.builder()
                 .abilities(AbilitiesTemplate.builder()
                         .ability(AbilityTemplate.builder("living_flesh")
-                                .initialMaxLevel(10)
                                 .rankModifier(1, "gluttonous_devour")
                                 .rankModifier(3, "vital_feast")
                                 .rankModifier(5, "insatiable_echo")

@@ -7,6 +7,8 @@ import io.redspace.ironsspellbooks.spells.ender.TeleportSpell;
 import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.ReliquifiedIronsSpellsAndSpellbooks;
 import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.init.RISASItems;
 import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.init.RISASDataComponents;
+import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.items.base.ISASRelicItem;
+import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.items.base.ISASWearableRelicItem;
 import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.items.misc.RISASLootEntries;
 import it.hurts.sskirillss.relics.api.relics.AbilityMetricTemplate;
 import it.hurts.sskirillss.relics.api.relics.AbilityStatisticTemplate;
@@ -36,13 +38,12 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 
-public class FlaskOfTheRedMistItem extends ISASRelic {
+public class FlaskOfTheRedMistItem extends ISASWearableRelicItem {
     @Override
     public RelicTemplate constructDefaultRelicTemplate() {
         return RelicTemplate.builder()
                 .abilities(AbilitiesTemplate.builder()
                         .ability(AbilityTemplate.builder("red_mist")
-                                .initialMaxLevel(10)
                                 .rankModifier(1, "smokescreen")
                                 .rankModifier(3, "hunt_mark")
                                 .rankModifier(5, "execution_window")

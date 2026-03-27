@@ -2,7 +2,13 @@
   "replace": false,
   "values": [
     "reliquified_irons_spells_and_spellbooks:bloody_voodoo_doll",
+    "reliquified_irons_spells_and_spellbooks:dragon_blood_vial",
     "reliquified_irons_spells_and_spellbooks:flask_of_the_red_mist",
-    "reliquified_irons_spells_and_spellbooks:living_flesh"
+    "reliquified_irons_spells_and_spellbooks:immaterial_disperser",
+    "reliquified_irons_spells_and_spellbooks:lunar_sextant",
+    "reliquified_irons_spells_and_spellbooks:living_flesh",
+    "reliquified_irons_spells_and_spellbooks:sealed_sword",
+    "reliquified_irons_spells_and_spellbooks:sealed_rapier",
+    "reliquified_irons_spells_and_spellbooks:sealed_claymore"
   ]
 }

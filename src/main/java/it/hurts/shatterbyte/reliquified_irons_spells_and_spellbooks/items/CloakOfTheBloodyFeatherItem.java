@@ -4,6 +4,7 @@ import io.redspace.ironsspellbooks.entity.spells.blood_needle.BloodNeedle;
 import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.ReliquifiedIronsSpellsAndSpellbooks;
 import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.init.RISASItems;
 import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.init.RISASDataComponents;
+import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.items.base.ISASWearableRelicItem;
 import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.items.misc.RISASLootEntries;
 import it.hurts.sskirillss.relics.api.relics.AbilityMetricTemplate;
 import it.hurts.sskirillss.relics.api.relics.AbilityStatisticTemplate;
@@ -36,13 +37,12 @@ import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import top.theillusivec4.curios.api.SlotContext;
 
-public class CloakOfTheBloodyFeather extends ISASRelic {
+public class CloakOfTheBloodyFeatherItem extends ISASWearableRelicItem {
     @Override
     public RelicTemplate constructDefaultRelicTemplate() {
         return RelicTemplate.builder()
                 .abilities(AbilitiesTemplate.builder()
                         .ability(AbilityTemplate.builder("blood_feather")
-                                .initialMaxLevel(10)
                                 .rankModifier(1, "execution_heal")
                                 .rankModifier(3, "needle_bleeding")
                                 .rankModifier(5, "needle_recycle")
@@ -201,12 +201,12 @@ public class CloakOfTheBloodyFeather extends ISASRelic {
                     && needle.getPersistentData().getBoolean("risas_cloak_of_the_bloody_feather")
                     && event.getSource().getEntity() instanceof ServerPlayer owner) {
                 ItemStack bestStack = ItemStack.EMPTY;
-                CloakOfTheBloodyFeather bestRelic = null;
+                CloakOfTheBloodyFeatherItem bestRelic = null;
                 AbilityData bestAbility = null;
                 var bestDamage = -1D;
 
                 for (var stack : EntityUtils.findEquippedCurios(owner, RISASItems.CLOAK_OF_THE_BLOODY_FEATHER.value())) {
-                    if (!(stack.getItem() instanceof CloakOfTheBloodyFeather relic))
+                    if (!(stack.getItem() instanceof CloakOfTheBloodyFeatherItem relic))
                         continue;
 
                     var ability = relic.getRelicData(owner, stack).getAbilitiesData().getAbilityData("blood_feather");
@@ -258,7 +258,7 @@ public class CloakOfTheBloodyFeather extends ISASRelic {
                 return;
 
             for (var stack : EntityUtils.findEquippedCurios(player, RISASItems.CLOAK_OF_THE_BLOODY_FEATHER.value())) {
-                if (!(stack.getItem() instanceof CloakOfTheBloodyFeather relic))
+                if (!(stack.getItem() instanceof CloakOfTheBloodyFeatherItem relic))
                     continue;
 
                 var ability = relic.getRelicData(player, stack).getAbilitiesData().getAbilityData("blood_feather");
@@ -288,7 +288,7 @@ public class CloakOfTheBloodyFeather extends ISASRelic {
                 var bestHeal = -1D;
 
                 for (var stack : EntityUtils.findEquippedCurios(owner, RISASItems.CLOAK_OF_THE_BLOODY_FEATHER.value())) {
-                    if (!(stack.getItem() instanceof CloakOfTheBloodyFeather relic))
+                    if (!(stack.getItem() instanceof CloakOfTheBloodyFeatherItem relic))
                         continue;
 
                     var ability = relic.getRelicData(owner, stack).getAbilitiesData().getAbilityData("blood_feather");
@@ -320,7 +320,7 @@ public class CloakOfTheBloodyFeather extends ISASRelic {
                 return;
 
             for (var stack : EntityUtils.findEquippedCurios(player, RISASItems.CLOAK_OF_THE_BLOODY_FEATHER.value())) {
-                if (stack.getItem() instanceof CloakOfTheBloodyFeather)
+                if (stack.getItem() instanceof CloakOfTheBloodyFeatherItem)
                     clearBuffer(stack);
             }
         }

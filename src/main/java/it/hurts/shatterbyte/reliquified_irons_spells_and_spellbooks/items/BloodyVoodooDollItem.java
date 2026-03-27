@@ -6,6 +6,8 @@ import io.redspace.ironsspellbooks.entity.spells.blood_needle.BloodNeedle;
 import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.ReliquifiedIronsSpellsAndSpellbooks;
 import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.init.RISASItems;
 import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.init.RISASDataComponents;
+import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.items.base.ISASRelicItem;
+import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.items.base.ISASWearableRelicItem;
 import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.items.misc.RISASLootEntries;
 import it.hurts.sskirillss.relics.api.relics.AbilityMetricTemplate;
 import it.hurts.sskirillss.relics.api.relics.AbilityStatisticTemplate;
@@ -38,13 +40,12 @@ import top.theillusivec4.curios.api.SlotContext;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BloodyVoodooDollItem extends ISASRelic {
+public class BloodyVoodooDollItem extends ISASWearableRelicItem {
     @Override
     public RelicTemplate constructDefaultRelicTemplate() {
         return RelicTemplate.builder()
                 .abilities(AbilitiesTemplate.builder()
                         .ability(AbilityTemplate.builder("voodoo_mark")
-                                .initialMaxLevel(10)
                                 .rankModifier(1, "needle_leech")
                                 .rankModifier(3, "needle_ricochet")
                                 .rankModifier(5, "death_burst")

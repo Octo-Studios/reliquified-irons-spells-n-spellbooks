@@ -6,6 +6,8 @@ import io.redspace.ironsspellbooks.damage.SpellDamageSource;
 import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.ReliquifiedIronsSpellsAndSpellbooks;
 import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.init.RISASItems;
 import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.init.RISASDataComponents;
+import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.items.base.ISASRelicItem;
+import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.items.base.ISASWearableRelicItem;
 import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.items.misc.RISASLootEntries;
 import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.network.payload.MaskOfHungerBeamPayload;
 import it.hurts.sskirillss.relics.api.relics.AbilityMetricTemplate;
@@ -33,13 +35,12 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-public class MaskOfHungerItem extends ISASRelic {
+public class MaskOfHungerItem extends ISASWearableRelicItem {
     @Override
     public RelicTemplate constructDefaultRelicTemplate() {
         return RelicTemplate.builder()
                 .abilities(AbilitiesTemplate.builder()
                         .ability(AbilityTemplate.builder("hunger_mask")
-                                .initialMaxLevel(10)
                                 .rankModifier(1, "gluttonous_surge")
                                 .rankModifier(3, "paralyzing_beam")
                                 .rankModifier(5, "predator_reset")

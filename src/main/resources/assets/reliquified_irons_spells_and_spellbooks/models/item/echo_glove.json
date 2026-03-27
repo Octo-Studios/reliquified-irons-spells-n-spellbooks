@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "reliquified_irons_spells_and_spellbooks:item/echo_glove"
+  }
+}

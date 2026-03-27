@@ -4,6 +4,7 @@ import io.redspace.ironsspellbooks.entity.spells.blood_slash.BloodSlashProjectil
 import io.redspace.ironsspellbooks.registries.SoundRegistry;
 import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.ReliquifiedIronsSpellsAndSpellbooks;
 import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.init.RISASItems;
+import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.items.base.ISASWearableRelicItem;
 import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.items.misc.RISASLootEntries;
 import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.network.payload.RingOfBladesAirSwingPayload;
 import it.hurts.sskirillss.relics.api.relics.AbilityMetricTemplate;
@@ -40,13 +41,12 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
-public class RingOfBlades extends ISASRelic {
+public class RingOfBladesItem extends ISASWearableRelicItem {
     @Override
     public RelicTemplate constructDefaultRelicTemplate() {
         return RelicTemplate.builder()
                 .abilities(AbilitiesTemplate.builder()
                         .ability(AbilityTemplate.builder("ring_of_blades")
-                                .initialMaxLevel(10)
                                 .rankModifier(1, "blade_leech")
                                 .rankModifier(3, "blade_rampage")
                                 .rankModifier(5, "multicast_arc")
@@ -265,7 +265,7 @@ public class RingOfBlades extends ISASRelic {
             ActiveRelic bestRelic = null;
 
             for (var stack : EntityUtils.findEquippedCurios(player, RISASItems.RING_OF_BLADES.value())) {
-                if (!(stack.getItem() instanceof RingOfBlades relic))
+                if (!(stack.getItem() instanceof RingOfBladesItem relic))
                     continue;
 
                 var ability = relic.getRelicData(player, stack).getAbilitiesData().getAbilityData("ring_of_blades");
@@ -285,7 +285,7 @@ public class RingOfBlades extends ISASRelic {
             return bestRelic;
         }
 
-        private record ActiveRelic(RingOfBlades item, ItemStack stack, AbilityData ability) {
+        private record ActiveRelic(RingOfBladesItem item, ItemStack stack, AbilityData ability) {
         }
     }
 

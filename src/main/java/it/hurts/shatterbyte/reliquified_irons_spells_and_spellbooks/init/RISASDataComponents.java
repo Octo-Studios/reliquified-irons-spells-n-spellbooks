@@ -81,10 +81,120 @@ public class RISASDataComponents {
             LivingFleshScheduledDevourData.CODEC.listOf(),
             LivingFleshScheduledDevourData.STREAM_CODEC.apply(ByteBufCodecs.list())
     );
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<List<ImmaterialDisperserRetaliationData>>> IMMATERIAL_DISPERSER_RETALIATION = construct(
+            "immaterial_disperser/retaliation",
+            ImmaterialDisperserRetaliationData.CODEC.listOf(),
+            ImmaterialDisperserRetaliationData.STREAM_CODEC.apply(ByteBufCodecs.list())
+    );
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<List<EnderBowMarkData>>> ENDER_BOW_MARKS = construct(
+            "ender_bow/marks",
+            EnderBowMarkData.CODEC.listOf(),
+            EnderBowMarkData.STREAM_CODEC.apply(ByteBufCodecs.list())
+    );
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<List<EchoGloveFallBonusData>>> ECHO_GLOVE_FALL_BONUS = construct(
+            "echo_glove/fall_bonus",
+            EchoGloveFallBonusData.CODEC.listOf(),
+            EchoGloveFallBonusData.STREAM_CODEC.apply(ByteBufCodecs.list())
+    );
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<DimensionKeyPointData>> DIMENSION_KEY_POINT = construct(
+            "dimension_key/point",
+            DimensionKeyPointData.CODEC,
+            DimensionKeyPointData.STREAM_CODEC
+    );
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<DimensionKeyActivePortalData>> DIMENSION_KEY_ACTIVE_PORTALS = construct(
+            "dimension_key/active_portals",
+            DimensionKeyActivePortalData.CODEC,
+            DimensionKeyActivePortalData.STREAM_CODEC
+    );
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<List<GalaxyDevourerDiademBlackHoleData>>> GALAXY_DEVOURER_DIADEM_BLACK_HOLES = construct(
+            "galaxy_devourer_diadem/black_holes",
+            GalaxyDevourerDiademBlackHoleData.CODEC.listOf(),
+            GalaxyDevourerDiademBlackHoleData.STREAM_CODEC.apply(ByteBufCodecs.list())
+    );
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<List<GalaxyDevourerDiademDamageData>>> GALAXY_DEVOURER_DIADEM_DAMAGE_DEALT = construct(
+            "galaxy_devourer_diadem/damage_dealt",
+            GalaxyDevourerDiademDamageData.CODEC.listOf(),
+            GalaxyDevourerDiademDamageData.STREAM_CODEC.apply(ByteBufCodecs.list())
+    );
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<List<SealedWeaponSummonData>>> SEALED_WEAPON_SUMMONS = construct(
+            "sealed_weapon/summons",
+            SealedWeaponSummonData.CODEC.listOf(),
+            SealedWeaponSummonData.STREAM_CODEC.apply(ByteBufCodecs.list())
+    );
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<UUID>> SEALED_WEAPON_INSTANCE = construct(
+            "sealed_weapon/instance",
+            UUIDUtil.CODEC,
+            UUIDUtil.STREAM_CODEC
+    );
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Long>> MIRROR_OF_TRANSGRESSION_USE_STARTED_AT = construct(
+            "mirror_of_transgression/use_started_at",
+            Codec.LONG,
+            ByteBufCodecs.VAR_LONG
+    );
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Long>> PULSAR_MANTLE_COOLDOWN_UNTIL = construct(
+            "pulsar_mantle/cooldown_until",
+            Codec.LONG,
+            ByteBufCodecs.VAR_LONG
+    );
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> PULSAR_MANTLE_PENDING_MISSILES = construct(
+            "pulsar_mantle/pending_missiles",
+            Codec.INT,
+            ByteBufCodecs.VAR_INT
+    );
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Long>> PULSAR_MANTLE_NEXT_SHOT_AT = construct(
+            "pulsar_mantle/next_shot_at",
+            Codec.LONG,
+            ByteBufCodecs.VAR_LONG
+    );
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> PULSAR_MANTLE_RELEASE_STEP = construct(
+            "pulsar_mantle/release_step",
+            Codec.INT,
+            ByteBufCodecs.VAR_INT
+    );
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> PULSAR_MANTLE_BELOW_THRESHOLD = construct(
+            "pulsar_mantle/below_threshold",
+            Codec.BOOL,
+            ByteBufCodecs.BOOL
+    );
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Long>> MASK_OF_HUNGER_COOLDOWN_UNTIL = construct(
             "mask_of_hunger/cooldown_until",
             Codec.LONG,
             ByteBufCodecs.VAR_LONG
+    );
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Double>> RING_OF_ELUSIVENESS_CHARGES = construct(
+            "ring_of_elusiveness/charges",
+            Codec.DOUBLE,
+            ByteBufCodecs.DOUBLE
+    );
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Long>> RING_OF_ELUSIVENESS_LAST_UPDATE = construct(
+            "ring_of_elusiveness/last_update",
+            Codec.LONG,
+            ByteBufCodecs.VAR_LONG
+    );
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Long>> RING_OF_ELUSIVENESS_BONUS_UNTIL = construct(
+            "ring_of_elusiveness/bonus_until",
+            Codec.LONG,
+            ByteBufCodecs.VAR_LONG
+    );
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Double>> SHADOW_CLAWS_CHARGES = construct(
+            "shadow_claws/charges",
+            Codec.DOUBLE,
+            ByteBufCodecs.DOUBLE
+    );
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Long>> SHADOW_CLAWS_LAST_UPDATE = construct(
+            "shadow_claws/last_update",
+            Codec.LONG,
+            ByteBufCodecs.VAR_LONG
+    );
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> SHADOW_CLAWS_SHADOW_SLASH_ACTIVE = construct(
+            "shadow_claws/shadow_slash_active",
+            Codec.BOOL,
+            ByteBufCodecs.BOOL
+    );
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> SHADOW_CLAWS_SHADOW_SLASH_HIT = construct(
+            "shadow_claws/shadow_slash_hit",
+            Codec.BOOL,
+            ByteBufCodecs.BOOL
     );
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<List<SinnerCrownSummonData>>> SINNER_CROWN_SUMMONS = construct(
             "sinner_crown/summons",
@@ -348,6 +458,190 @@ public class RISASDataComponents {
                 LivingFleshScheduledDevourPayload.STREAM_CODEC,
                 LivingFleshScheduledDevourData::payload,
                 LivingFleshScheduledDevourData::new
+        );
+    }
+
+    public record ImmaterialDisperserRetaliationData(UUID target, ResourceKey<Level> level, long expiresAtTick, double bonus) {
+        public static final Codec<ImmaterialDisperserRetaliationData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                UUIDUtil.CODEC.fieldOf("target").forGetter(ImmaterialDisperserRetaliationData::target),
+                Level.RESOURCE_KEY_CODEC.fieldOf("level").forGetter(ImmaterialDisperserRetaliationData::level),
+                Codec.LONG.fieldOf("expires_at_tick").forGetter(ImmaterialDisperserRetaliationData::expiresAtTick),
+                Codec.DOUBLE.fieldOf("bonus").forGetter(ImmaterialDisperserRetaliationData::bonus)
+        ).apply(instance, ImmaterialDisperserRetaliationData::new));
+
+        public static final StreamCodec<RegistryFriendlyByteBuf, ImmaterialDisperserRetaliationData> STREAM_CODEC = StreamCodec.composite(
+                UUIDUtil.STREAM_CODEC,
+                ImmaterialDisperserRetaliationData::target,
+                ResourceKey.streamCodec(Registries.DIMENSION),
+                ImmaterialDisperserRetaliationData::level,
+                ByteBufCodecs.VAR_LONG,
+                ImmaterialDisperserRetaliationData::expiresAtTick,
+                ByteBufCodecs.DOUBLE,
+                ImmaterialDisperserRetaliationData::bonus,
+                ImmaterialDisperserRetaliationData::new
+        );
+    }
+
+    public record EnderBowMarkData(UUID target, ResourceKey<Level> level, long expiresAtTick) {
+        public static final Codec<EnderBowMarkData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                UUIDUtil.CODEC.fieldOf("target").forGetter(EnderBowMarkData::target),
+                Level.RESOURCE_KEY_CODEC.fieldOf("level").forGetter(EnderBowMarkData::level),
+                Codec.LONG.fieldOf("expires_at_tick").forGetter(EnderBowMarkData::expiresAtTick)
+        ).apply(instance, EnderBowMarkData::new));
+
+        public static final StreamCodec<RegistryFriendlyByteBuf, EnderBowMarkData> STREAM_CODEC = StreamCodec.composite(
+                UUIDUtil.STREAM_CODEC,
+                EnderBowMarkData::target,
+                ResourceKey.streamCodec(Registries.DIMENSION),
+                EnderBowMarkData::level,
+                ByteBufCodecs.VAR_LONG,
+                EnderBowMarkData::expiresAtTick,
+                EnderBowMarkData::new
+        );
+    }
+
+    public record EchoGloveFallBonusData(UUID target, ResourceKey<Level> level, long expiresAtTick, double bonus) {
+        public static final Codec<EchoGloveFallBonusData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                UUIDUtil.CODEC.fieldOf("target").forGetter(EchoGloveFallBonusData::target),
+                Level.RESOURCE_KEY_CODEC.fieldOf("level").forGetter(EchoGloveFallBonusData::level),
+                Codec.LONG.fieldOf("expires_at_tick").forGetter(EchoGloveFallBonusData::expiresAtTick),
+                Codec.DOUBLE.fieldOf("bonus").forGetter(EchoGloveFallBonusData::bonus)
+        ).apply(instance, EchoGloveFallBonusData::new));
+
+        public static final StreamCodec<RegistryFriendlyByteBuf, EchoGloveFallBonusData> STREAM_CODEC = StreamCodec.composite(
+                UUIDUtil.STREAM_CODEC,
+                EchoGloveFallBonusData::target,
+                ResourceKey.streamCodec(Registries.DIMENSION),
+                EchoGloveFallBonusData::level,
+                ByteBufCodecs.VAR_LONG,
+                EchoGloveFallBonusData::expiresAtTick,
+                ByteBufCodecs.DOUBLE,
+                EchoGloveFallBonusData::bonus,
+                EchoGloveFallBonusData::new
+        );
+    }
+
+    public record DimensionKeyPointData(ResourceKey<Level> level, double x, double y, double z, float yRot) {
+        public static final Codec<DimensionKeyPointData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                Level.RESOURCE_KEY_CODEC.fieldOf("level").forGetter(DimensionKeyPointData::level),
+                Codec.DOUBLE.fieldOf("x").forGetter(DimensionKeyPointData::x),
+                Codec.DOUBLE.fieldOf("y").forGetter(DimensionKeyPointData::y),
+                Codec.DOUBLE.fieldOf("z").forGetter(DimensionKeyPointData::z),
+                Codec.FLOAT.fieldOf("y_rot").forGetter(DimensionKeyPointData::yRot)
+        ).apply(instance, DimensionKeyPointData::new));
+
+        public static final StreamCodec<RegistryFriendlyByteBuf, DimensionKeyPointData> STREAM_CODEC = StreamCodec.composite(
+                ResourceKey.streamCodec(Registries.DIMENSION),
+                DimensionKeyPointData::level,
+                ByteBufCodecs.DOUBLE,
+                DimensionKeyPointData::x,
+                ByteBufCodecs.DOUBLE,
+                DimensionKeyPointData::y,
+                ByteBufCodecs.DOUBLE,
+                DimensionKeyPointData::z,
+                ByteBufCodecs.FLOAT,
+                DimensionKeyPointData::yRot,
+                DimensionKeyPointData::new
+        );
+    }
+
+    public record DimensionKeyActivePortalData(
+            ResourceKey<Level> firstLevel,
+            UUID firstPortal,
+            ResourceKey<Level> secondLevel,
+            UUID secondPortal,
+            long expiresAtTick,
+            List<UUID> processedEntities
+    ) {
+        public static final Codec<DimensionKeyActivePortalData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                Level.RESOURCE_KEY_CODEC.fieldOf("first_level").forGetter(DimensionKeyActivePortalData::firstLevel),
+                UUIDUtil.CODEC.fieldOf("first_portal").forGetter(DimensionKeyActivePortalData::firstPortal),
+                Level.RESOURCE_KEY_CODEC.fieldOf("second_level").forGetter(DimensionKeyActivePortalData::secondLevel),
+                UUIDUtil.CODEC.fieldOf("second_portal").forGetter(DimensionKeyActivePortalData::secondPortal),
+                Codec.LONG.fieldOf("expires_at_tick").forGetter(DimensionKeyActivePortalData::expiresAtTick),
+                UUIDUtil.CODEC.listOf().optionalFieldOf("processed_entities", List.of()).forGetter(DimensionKeyActivePortalData::processedEntities)
+        ).apply(instance, DimensionKeyActivePortalData::new));
+
+        public static final StreamCodec<RegistryFriendlyByteBuf, DimensionKeyActivePortalData> STREAM_CODEC = StreamCodec.composite(
+                ResourceKey.streamCodec(Registries.DIMENSION),
+                DimensionKeyActivePortalData::firstLevel,
+                UUIDUtil.STREAM_CODEC,
+                DimensionKeyActivePortalData::firstPortal,
+                ResourceKey.streamCodec(Registries.DIMENSION),
+                DimensionKeyActivePortalData::secondLevel,
+                UUIDUtil.STREAM_CODEC,
+                DimensionKeyActivePortalData::secondPortal,
+                ByteBufCodecs.VAR_LONG,
+                DimensionKeyActivePortalData::expiresAtTick,
+                UUIDUtil.STREAM_CODEC.apply(ByteBufCodecs.list()),
+                DimensionKeyActivePortalData::processedEntities,
+                DimensionKeyActivePortalData::new
+        );
+    }
+
+    public record GalaxyDevourerDiademBlackHoleData(UUID blackHole, ResourceKey<Level> level, double x, double y, double z, long expiresAtTick) {
+        public static final Codec<GalaxyDevourerDiademBlackHoleData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                UUIDUtil.CODEC.fieldOf("black_hole").forGetter(GalaxyDevourerDiademBlackHoleData::blackHole),
+                Level.RESOURCE_KEY_CODEC.fieldOf("level").forGetter(GalaxyDevourerDiademBlackHoleData::level),
+                Codec.DOUBLE.fieldOf("x").forGetter(GalaxyDevourerDiademBlackHoleData::x),
+                Codec.DOUBLE.fieldOf("y").forGetter(GalaxyDevourerDiademBlackHoleData::y),
+                Codec.DOUBLE.fieldOf("z").forGetter(GalaxyDevourerDiademBlackHoleData::z),
+                Codec.LONG.fieldOf("expires_at_tick").forGetter(GalaxyDevourerDiademBlackHoleData::expiresAtTick)
+        ).apply(instance, GalaxyDevourerDiademBlackHoleData::new));
+
+        public static final StreamCodec<RegistryFriendlyByteBuf, GalaxyDevourerDiademBlackHoleData> STREAM_CODEC = StreamCodec.composite(
+                UUIDUtil.STREAM_CODEC,
+                GalaxyDevourerDiademBlackHoleData::blackHole,
+                ResourceKey.streamCodec(Registries.DIMENSION),
+                GalaxyDevourerDiademBlackHoleData::level,
+                ByteBufCodecs.DOUBLE,
+                GalaxyDevourerDiademBlackHoleData::x,
+                ByteBufCodecs.DOUBLE,
+                GalaxyDevourerDiademBlackHoleData::y,
+                ByteBufCodecs.DOUBLE,
+                GalaxyDevourerDiademBlackHoleData::z,
+                ByteBufCodecs.VAR_LONG,
+                GalaxyDevourerDiademBlackHoleData::expiresAtTick,
+                GalaxyDevourerDiademBlackHoleData::new
+        );
+    }
+
+    public record GalaxyDevourerDiademDamageData(UUID blackHole, ResourceKey<Level> level, double dealtDamage) {
+        public static final Codec<GalaxyDevourerDiademDamageData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                UUIDUtil.CODEC.fieldOf("black_hole").forGetter(GalaxyDevourerDiademDamageData::blackHole),
+                Level.RESOURCE_KEY_CODEC.fieldOf("level").forGetter(GalaxyDevourerDiademDamageData::level),
+                Codec.DOUBLE.fieldOf("dealt_damage").forGetter(GalaxyDevourerDiademDamageData::dealtDamage)
+        ).apply(instance, GalaxyDevourerDiademDamageData::new));
+
+        public static final StreamCodec<RegistryFriendlyByteBuf, GalaxyDevourerDiademDamageData> STREAM_CODEC = StreamCodec.composite(
+                UUIDUtil.STREAM_CODEC,
+                GalaxyDevourerDiademDamageData::blackHole,
+                ResourceKey.streamCodec(Registries.DIMENSION),
+                GalaxyDevourerDiademDamageData::level,
+                ByteBufCodecs.DOUBLE,
+                GalaxyDevourerDiademDamageData::dealtDamage,
+                GalaxyDevourerDiademDamageData::new
+        );
+    }
+
+    public record SealedWeaponSummonData(int weaponType, UUID summon, ResourceKey<Level> level, long respawnAtTick) {
+        public static final Codec<SealedWeaponSummonData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                Codec.INT.fieldOf("weapon_type").forGetter(SealedWeaponSummonData::weaponType),
+                UUIDUtil.CODEC.fieldOf("summon").forGetter(SealedWeaponSummonData::summon),
+                Level.RESOURCE_KEY_CODEC.fieldOf("level").forGetter(SealedWeaponSummonData::level),
+                Codec.LONG.fieldOf("respawn_at_tick").forGetter(SealedWeaponSummonData::respawnAtTick)
+        ).apply(instance, SealedWeaponSummonData::new));
+
+        public static final StreamCodec<RegistryFriendlyByteBuf, SealedWeaponSummonData> STREAM_CODEC = StreamCodec.composite(
+                ByteBufCodecs.VAR_INT,
+                SealedWeaponSummonData::weaponType,
+                UUIDUtil.STREAM_CODEC,
+                SealedWeaponSummonData::summon,
+                ResourceKey.streamCodec(Registries.DIMENSION),
+                SealedWeaponSummonData::level,
+                ByteBufCodecs.VAR_LONG,
+                SealedWeaponSummonData::respawnAtTick,
+                SealedWeaponSummonData::new
         );
     }
 

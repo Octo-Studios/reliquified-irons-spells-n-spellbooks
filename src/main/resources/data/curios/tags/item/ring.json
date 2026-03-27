@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "reliquified_irons_spells_and_spellbooks:ring_of_blades"
+    "reliquified_irons_spells_and_spellbooks:ring_of_blades",
+    "reliquified_irons_spells_and_spellbooks:ring_of_elusiveness"
   ]
 }

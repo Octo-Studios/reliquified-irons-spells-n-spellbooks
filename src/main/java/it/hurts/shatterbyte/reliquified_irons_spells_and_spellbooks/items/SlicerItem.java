@@ -70,7 +70,6 @@ public class SlicerItem extends ExtendedSwordItem implements IRelicItem, ICreati
         return RelicTemplate.builder()
                 .abilities(AbilitiesTemplate.builder()
                         .ability(AbilityTemplate.builder("slicer_weapon")
-                                .initialMaxLevel(10)
                                 .rankModifier(3, "slow_charge_decay")
                                 .stat(AbilityStatTemplate.builder("weapon_damage")
                                         .initialValue(5D, 7.5D)
@@ -111,7 +110,6 @@ public class SlicerItem extends ExtendedSwordItem implements IRelicItem, ICreati
                                         .build())
                                 .build())
                         .ability(AbilityTemplate.builder("slicer")
-                                .initialMaxLevel(10)
                                 .rankModifier(1, "unstable_mark")
                                 .rankModifier(5, "blood_cycle")
                                 .stat(AbilityStatTemplate.builder("radius")
@@ -336,7 +334,7 @@ public class SlicerItem extends ExtendedSwordItem implements IRelicItem, ICreati
         }
 
         if (player.getMainHandItem() == stack && bladeAbility.canPlayerUse(player)) {
-            var damage = Math.max(0D, Math.round(bladeAbility.getStatData("weapon_damage").getValue()));
+            var damage = Math.max(0D, bladeAbility.getStatData("weapon_damage").getValue());
             var attackSpeed = Math.max(0D, bladeAbility.getStatData("weapon_attack_speed").getValue());
             var desired = SwordItem.createAttributes(Tiers.NETHERITE, (float) Math.max(-Tiers.NETHERITE.getAttackDamageBonus(), damage - 1D - Tiers.NETHERITE.getAttackDamageBonus()), (float) (attackSpeed - 4D));
 

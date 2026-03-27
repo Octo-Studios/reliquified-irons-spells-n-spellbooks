@@ -1,7 +1,7 @@
 package it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.network.payload;
 
 import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.ReliquifiedIronsSpellsAndSpellbooks;
-import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.items.RingOfBlades;
+import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.items.RingOfBladesItem;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -29,6 +29,6 @@ public final class RingOfBladesAirSwingPayload implements CustomPacketPayload {
         if (!(context.player() instanceof ServerPlayer player))
             return;
 
-        RingOfBlades.CommonEvents.tryTriggerOnAirSwing(player);
+        RingOfBladesItem.CommonEvents.tryTriggerOnAirSwing(player);
     }
 }

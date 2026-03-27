@@ -12,6 +12,8 @@ import io.redspace.ironsspellbooks.util.ParticleHelper;
 import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.ReliquifiedIronsSpellsAndSpellbooks;
 import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.init.RISASItems;
 import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.init.RISASDataComponents;
+import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.items.base.ISASRelicItem;
+import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.items.base.ISASWearableRelicItem;
 import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.items.misc.RISASLootEntries;
 import it.hurts.sskirillss.relics.api.relics.AbilityMetricTemplate;
 import it.hurts.sskirillss.relics.api.relics.AbilityStatisticTemplate;
@@ -44,13 +46,12 @@ import top.theillusivec4.curios.api.SlotContext;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SinnerCrownItem extends ISASRelic {
+public class SinnerCrownItem extends ISASWearableRelicItem {
     @Override
     public RelicTemplate constructDefaultRelicTemplate() {
         return RelicTemplate.builder()
                 .abilities(AbilitiesTemplate.builder()
                         .ability(AbilityTemplate.builder("sinner_crown")
-                                .initialMaxLevel(10)
                                 .rankModifier(1, "summon_lineage")
                                 .rankModifier(3, "shared_pain")
                                 .rankModifier(5, "sacrificial_end")
