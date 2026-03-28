@@ -4,6 +4,7 @@ import io.redspace.ironsspellbooks.api.magic.MagicData;
 import io.redspace.ironsspellbooks.capabilities.magic.SummonManager;
 import io.redspace.ironsspellbooks.capabilities.magic.SummonedEntitiesCastData;
 import io.redspace.ironsspellbooks.entity.spells.summoned_weapons.SummonedRapierEntity;
+import io.redspace.ironsspellbooks.network.SyncManaPacket;
 import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.ReliquifiedIronsSpellsAndSpellbooks;
 import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.entities.SummonedWeaponEntityTuning;
 import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.init.RISASDataComponents;
@@ -38,6 +39,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 import top.theillusivec4.curios.api.SlotContext;
 
 import java.util.ArrayList;
@@ -506,6 +508,7 @@ public class SealedRapierItem extends ISASWearableRelicItem {
                         var manaBefore = magicData.getMana();
 
                         magicData.addMana((float) manaRestore);
+                        PacketDistributor.sendToPlayer(player, new SyncManaPacket(magicData));
                         ability.getStatisticData().getMetricData("mana_strike_restored").addValue(Math.max(0F, magicData.getMana() - manaBefore));
                     }
                 }

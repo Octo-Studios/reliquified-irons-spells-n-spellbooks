@@ -2,14 +2,19 @@ package it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.items;
 
 import io.redspace.ironsspellbooks.api.entity.IMagicEntity;
 import io.redspace.ironsspellbooks.api.events.CounterSpellEvent;
+import io.redspace.ironsspellbooks.api.events.SpellDamageEvent;
 import io.redspace.ironsspellbooks.api.events.SpellPreCastEvent;
 import io.redspace.ironsspellbooks.api.magic.MagicData;
 import io.redspace.ironsspellbooks.api.registry.SpellRegistry;
 import io.redspace.ironsspellbooks.api.util.Utils;
+import io.redspace.ironsspellbooks.capabilities.magic.MultiTargetEntityCastData;
 import io.redspace.ironsspellbooks.capabilities.magic.RecastResult;
+import io.redspace.ironsspellbooks.capabilities.magic.TargetEntityCastData;
 import io.redspace.ironsspellbooks.effect.MagicMobEffect;
 import io.redspace.ironsspellbooks.entity.mobs.IMagicSummon;
 import io.redspace.ironsspellbooks.entity.mobs.AntiMagicSusceptible;
+import io.redspace.ironsspellbooks.network.SyncManaPacket;
+import io.redspace.ironsspellbooks.network.casting.SyncTargetingDataPacket;
 import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.ReliquifiedIronsSpellsAndSpellbooks;
 import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.init.RISASDataComponents;
 import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.init.RISASItems;
@@ -31,12 +36,12 @@ import it.hurts.sskirillss.relics.utils.MathUtils;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 import top.theillusivec4.curios.api.SlotContext;
 
 import java.util.ArrayList;
@@ -170,7 +175,7 @@ public class ImmaterialDisperserItem extends ISASWearableRelicItem {
     public static class CommonEvents {
         @SubscribeEvent
         public static void onSpellPreCast(SpellPreCastEvent event) {
-            if (!(event.getEntity() instanceof LivingEntity caster) || caster.level().isClientSide())
+            if (!(event.getEntity() instanceof ServerPlayer caster) || caster.level().isClientSide())
                 return;
 
             var spell = SpellRegistry.getSpell(event.getSpellId());
@@ -181,11 +186,31 @@ public class ImmaterialDisperserItem extends ISASWearableRelicItem {
             if (!(caster.level() instanceof ServerLevel level))
                 return;
 
-            if (caster instanceof Player casterPlayer && !spell.canBeInterrupted(casterPlayer))
+            if (!spell.canBeInterrupted(caster))
+                return;
+
+            var casterMagicData = MagicData.getPlayerMagicData(caster);
+            var castData = casterMagicData.getAdditionalCastData();
+
+            if (!(castData instanceof TargetEntityCastData || castData instanceof MultiTargetEntityCastData))
                 return;
 
             for (var player : level.players()) {
                 if (!player.isAlive() || player == caster)
+                    continue;
+
+                var targetsPlayer = false;
+
+                if (castData instanceof TargetEntityCastData targetData) {
+                    var target = targetData.getTarget(level);
+
+                    if (target != null && target.getUUID().equals(player.getUUID()))
+                        targetsPlayer = true;
+                } else if (castData instanceof MultiTargetEntityCastData multiTargetData) {
+                    targetsPlayer = multiTargetData.getTargets().contains(player.getUUID());
+                }
+
+                if (!targetsPlayer)
                     continue;
 
                 ImmaterialDisperserItem item = null;
@@ -236,12 +261,10 @@ public class ImmaterialDisperserItem extends ISASWearableRelicItem {
                 if (caster instanceof AntiMagicSusceptible antiMagicSusceptible)
                     antiMagicSusceptible.onAntiMagic(playerMagicData);
 
-                if (caster instanceof ServerPlayer casterPlayer) {
-                    Utils.serverSideCancelCast(casterPlayer, true);
-                    MagicData.getPlayerMagicData(casterPlayer).getPlayerRecasts().removeAll(RecastResult.COUNTERSPELL);
-                } else if (caster instanceof IMagicEntity magicEntity) {
-                    magicEntity.cancelCast();
-                }
+                Utils.serverSideCancelCast(caster, true);
+                casterMagicData.getPlayerRecasts().removeAll(RecastResult.COUNTERSPELL);
+                casterMagicData.resetAdditionalCastData();
+                PacketDistributor.sendToPlayer(caster, new SyncTargetingDataPacket(spell, List.of()));
 
                 for (var effect : caster.getActiveEffectsMap().keySet().stream().toList()) {
                     if (effect.value() instanceof MagicMobEffect)
@@ -260,6 +283,7 @@ public class ImmaterialDisperserItem extends ISASWearableRelicItem {
                     if (manaRestore > 0D) {
                         var manaBefore = Math.max(0D, playerMagicData.getMana());
                         playerMagicData.addMana((float) manaRestore);
+                        PacketDistributor.sendToPlayer(player, new SyncManaPacket(playerMagicData));
                         ability.getStatisticData().getMetricData("mana_refunded").addValue(Math.max(0D, playerMagicData.getMana() - manaBefore));
                     }
                 }
@@ -279,6 +303,182 @@ public class ImmaterialDisperserItem extends ISASWearableRelicItem {
                 entries.removeIf(data -> data.expiresAtTick() <= gameTime || data.target().equals(caster.getUUID()) && data.level().equals(level.dimension()));
                 entries.add(new RISASDataComponents.ImmaterialDisperserRetaliationData(caster.getUUID(), level.dimension(), gameTime + durationTicks, bonus));
                 stack.set(RISASDataComponents.IMMATERIAL_DISPERSER_RETALIATION.get(), List.copyOf(entries));
+                return;
+            }
+        }
+
+        @SubscribeEvent
+        public static void onSpellDamage(SpellDamageEvent event) {
+            if (!(event.getEntity() instanceof ServerPlayer player) || event.getAmount() <= 0F)
+                return;
+
+            var spellDamageSource = event.getSpellDamageSource();
+
+            if (spellDamageSource == null || spellDamageSource.spell() == null)
+                return;
+
+            var sourceEntity = spellDamageSource.getEntity();
+            var directEntity = spellDamageSource.getDirectEntity();
+            LivingEntity source = null;
+
+            if (sourceEntity instanceof LivingEntity sourceLiving && sourceLiving.isAlive() && sourceLiving != player)
+                source = sourceLiving;
+            else if (directEntity instanceof LivingEntity sourceLiving && sourceLiving.isAlive() && sourceLiving != player)
+                source = sourceLiving;
+
+            var threatEntity = directEntity != null ? directEntity : sourceEntity;
+
+            if (threatEntity == null || !threatEntity.isAlive() || threatEntity == player)
+                return;
+
+            ImmaterialDisperserItem item = null;
+            ItemStack stack = ItemStack.EMPTY;
+            var bestRadius = -1D;
+            var bestChance = 0D;
+
+            for (var candidateStack : it.hurts.sskirillss.relics.utils.EntityUtils.findEquippedCurios(player, RISASItems.IMMATERIAL_DISPERSER.value())) {
+                if (!(candidateStack.getItem() instanceof ImmaterialDisperserItem candidateItem))
+                    continue;
+
+                var ability = candidateItem.getRelicData(player, candidateStack).getAbilitiesData().getAbilityData("immaterial_disperser");
+
+                if (!ability.canPlayerUse(player))
+                    continue;
+
+                var radius = Math.max(0D, ability.getStatData("radius").getValue());
+                var chance = Math.max(0D, Math.min(1D, ability.getStatData("dispel_chance").getValue()));
+
+                if (radius <= 0D || threatEntity.distanceToSqr(player) > radius * radius)
+                    continue;
+
+                if (chance <= 0D)
+                    continue;
+
+                if (radius < bestRadius || radius == bestRadius && chance <= bestChance)
+                    continue;
+
+                bestRadius = radius;
+                bestChance = chance;
+                item = candidateItem;
+                stack = candidateStack;
+            }
+
+            if (item == null || stack.isEmpty() || player.level().getRandom().nextDouble() > bestChance)
+                return;
+
+            var counterTarget = source != null ? source : threatEntity;
+
+            if (NeoForge.EVENT_BUS.post(new CounterSpellEvent(player, counterTarget)).isCanceled())
+                return;
+
+            event.setCanceled(true);
+            event.setAmount(0F);
+
+            var playerMagicData = MagicData.getPlayerMagicData(player);
+
+            if (counterTarget instanceof AntiMagicSusceptible antiMagicSusceptible)
+                antiMagicSusceptible.onAntiMagic(playerMagicData);
+
+            if (counterTarget instanceof ServerPlayer sourcePlayer) {
+                Utils.serverSideCancelCast(sourcePlayer, true);
+                var sourceMagicData = MagicData.getPlayerMagicData(sourcePlayer);
+                sourceMagicData.getPlayerRecasts().removeAll(RecastResult.COUNTERSPELL);
+                sourceMagicData.resetAdditionalCastData();
+                PacketDistributor.sendToPlayer(sourcePlayer, new SyncTargetingDataPacket(spellDamageSource.spell(), List.of()));
+            } else if (counterTarget instanceof IMagicEntity magicEntity) {
+                magicEntity.cancelCast();
+            }
+
+            if (counterTarget instanceof LivingEntity livingSource) {
+                for (var effect : livingSource.getActiveEffectsMap().keySet().stream().toList()) {
+                    if (effect.value() instanceof MagicMobEffect)
+                        livingSource.removeEffect(effect);
+                }
+            }
+
+            var relicData = item.getRelicData(player, stack);
+            var ability = relicData.getAbilitiesData().getAbilityData("immaterial_disperser");
+
+            relicData.getLevelingData().addExperience("immaterial_disperser", "spell_dispelled", 1D);
+            ability.getStatisticData().getMetricData("spells_dispelled").addValue(1D);
+
+            if (ability.isRankModifierUnlocked("mana_refund")) {
+                var manaRestore = Math.max(0D, ability.getStatData("mana_restore").getValue());
+
+                if (manaRestore > 0D) {
+                    var manaBefore = Math.max(0D, playerMagicData.getMana());
+                    playerMagicData.addMana((float) manaRestore);
+                    PacketDistributor.sendToPlayer(player, new SyncManaPacket(playerMagicData));
+                    ability.getStatisticData().getMetricData("mana_refunded").addValue(Math.max(0D, playerMagicData.getMana() - manaBefore));
+                }
+            }
+
+            if (!ability.isRankModifierUnlocked("retaliation_mark") || source == null)
+                return;
+
+            var durationTicks = Math.max(0L, Math.round(Math.max(0D, ability.getStatData("retaliation_duration").getValue()) * 20D));
+            var bonus = Math.max(0D, ability.getStatData("retaliation_bonus").getValue());
+
+            if (durationTicks <= 0L || bonus <= 0D)
+                return;
+
+            var gameTime = player.level().getGameTime();
+            var levelKey = player.level().dimension();
+            var sourceId = source.getUUID();
+            var entries = new ArrayList<>(stack.getOrDefault(RISASDataComponents.IMMATERIAL_DISPERSER_RETALIATION.get(), List.of()));
+
+            entries.removeIf(data -> data.expiresAtTick() <= gameTime || data.target().equals(sourceId) && data.level().equals(levelKey));
+            entries.add(new RISASDataComponents.ImmaterialDisperserRetaliationData(sourceId, levelKey, gameTime + durationTicks, bonus));
+            stack.set(RISASDataComponents.IMMATERIAL_DISPERSER_RETALIATION.get(), List.copyOf(entries));
+        }
+
+        @SubscribeEvent
+        public static void onPlayerDamagedBySummonMelee(LivingDamageEvent.Pre event) {
+            if (!(event.getEntity() instanceof ServerPlayer player) || event.getNewDamage() <= 0F)
+                return;
+
+            LivingEntity attacker = null;
+            var directEntity = event.getSource().getDirectEntity();
+            var sourceEntity = event.getSource().getEntity();
+
+            if (directEntity instanceof LivingEntity directLiving && directLiving.isAlive())
+                attacker = directLiving;
+            else if (sourceEntity instanceof LivingEntity sourceLiving && sourceLiving.isAlive())
+                attacker = sourceLiving;
+
+            if (attacker == null || attacker == player)
+                return;
+
+            if (!(attacker instanceof IMagicSummon || attacker instanceof AntiMagicSusceptible))
+                return;
+
+            if (directEntity != attacker)
+                return;
+
+            for (var stack : it.hurts.sskirillss.relics.utils.EntityUtils.findEquippedCurios(player, RISASItems.IMMATERIAL_DISPERSER.value())) {
+                if (!(stack.getItem() instanceof ImmaterialDisperserItem item))
+                    continue;
+
+                var ability = item.getRelicData(player, stack).getAbilitiesData().getAbilityData("immaterial_disperser");
+
+                if (!ability.canPlayerUse(player) || !ability.isRankModifierUnlocked("summon_dispel"))
+                    continue;
+
+                var magicData = MagicData.getPlayerMagicData(player);
+
+                if (attacker instanceof AntiMagicSusceptible antiMagicSusceptible)
+                    antiMagicSusceptible.onAntiMagic(magicData);
+
+                if (attacker.isAlive())
+                    attacker.discard();
+
+                if (!attacker.isAlive()) {
+                    var relicData = item.getRelicData(player, stack);
+
+                    relicData.getLevelingData().addExperience("immaterial_disperser", "summon_dispelled", 1D);
+                    ability.getStatisticData().getMetricData("summons_dispelled").addValue(1D);
+                }
+
                 return;
             }
         }

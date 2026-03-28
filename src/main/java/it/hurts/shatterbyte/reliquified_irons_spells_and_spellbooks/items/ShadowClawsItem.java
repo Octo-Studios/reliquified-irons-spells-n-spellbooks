@@ -5,7 +5,9 @@ import io.redspace.ironsspellbooks.api.magic.MagicData;
 import io.redspace.ironsspellbooks.api.registry.AttributeRegistry;
 import io.redspace.ironsspellbooks.api.registry.SpellRegistry;
 import io.redspace.ironsspellbooks.api.spells.CastSource;
+import io.redspace.ironsspellbooks.api.entity.IMagicEntity;
 import io.redspace.ironsspellbooks.damage.SpellDamageSource;
+import io.redspace.ironsspellbooks.network.SyncManaPacket;
 import io.redspace.ironsspellbooks.registries.SoundRegistry;
 import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.ReliquifiedIronsSpellsAndSpellbooks;
 import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.init.RISASDataComponents;
@@ -49,6 +51,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 public class ShadowClawsItem extends ExtendedSwordItem implements IRelicItem, ICreativeTabContent {
     public ShadowClawsItem() {
@@ -353,7 +356,11 @@ public class ShadowClawsItem extends ExtendedSwordItem implements IRelicItem, IC
                 return;
 
             targetMagic.setMana(targetMana - stolenMana);
-            MagicData.getPlayerMagicData(player).addMana(stolenMana);
+            if (target instanceof ServerPlayer targetPlayer)
+                PacketDistributor.sendToPlayer(targetPlayer, new SyncManaPacket(targetMagic));
+            var playerMagic = MagicData.getPlayerMagicData(player);
+            playerMagic.addMana(stolenMana);
+            PacketDistributor.sendToPlayer(player, new SyncManaPacket(playerMagic));
             weaponAbility.getStatisticData().getMetricData("mana_stolen").addValue(stolenMana);
             relicData.getLevelingData().addExperience("shadow_claws", "mana_steal_success", 1D);
         }
@@ -390,6 +397,9 @@ public class ShadowClawsItem extends ExtendedSwordItem implements IRelicItem, IC
             var weaponAbility = abilities.getAbilityData("shadow_claws");
 
             if (!weaponAbility.canPlayerUse(player) || !weaponAbility.isRankModifierUnlocked("mana_exploit"))
+                return;
+
+            if (!(event.getEntity() instanceof Player) && !(event.getEntity() instanceof IMagicEntity))
                 return;
 
             var manaAttribute = event.getEntity().getAttribute(AttributeRegistry.MAX_MANA);
