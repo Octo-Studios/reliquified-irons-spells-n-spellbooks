@@ -2,16 +2,22 @@ package it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.client.hand
 
 import it.hurts.octostudios.octolib.module.particle.trail.EntityTrailRegistry;
 import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.ReliquifiedIronsSpellsAndSpellbooks;
+import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.client.models.items.CloakOfTheBloodyFeatherModel;
+import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.client.models.items.HatOfOmniscienceModel;
+import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.client.models.items.MaskOfHungerModel;
+import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.client.models.items.SinnerCrownModel;
+import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.client.renderer.items.CloakOfTheBloodyFeatherRenderer;
+import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.client.renderer.items.HatOfOmniscienceRenderer;
+import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.client.renderer.items.MaskOfHungerRenderer;
+import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.client.renderer.items.SinnerCrownRenderer;
 import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.entities.DragonBloodDropletEntity;
 import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.init.RISASEntities;
 import it.hurts.shatterbyte.reliquified_irons_spells_and_spellbooks.init.RISASItems;
 import it.hurts.sskirillss.relics.api.relics.IRelicItem;
 import it.hurts.sskirillss.relics.client.renderer.entities.NullRenderer;
 import it.hurts.sskirillss.relics.client.style.base.RelicStyle;
-import it.hurts.sskirillss.relics.entities.SporeEntity;
-import it.hurts.sskirillss.relics.init.RelicsEntities;
+import it.hurts.sskirillss.relics.init.RelicsRelicRenderers;
 import it.hurts.sskirillss.relics.init.RelicsRelicStyles;
-import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -36,6 +42,19 @@ public class ClientHandler {
         });
 
         EntityTrailRegistry.registerProvider(RISASEntities.DRAGON_BLOOD_DROPLET.get(), DragonBloodDropletEntity.TrailProvider::new);
+
+        RelicsRelicRenderers.register(RISASItems.CLOAK_OF_THE_BLOODY_FEATHER.get(), CloakOfTheBloodyFeatherRenderer::new);
+        RelicsRelicRenderers.register(RISASItems.HAT_OF_OMNISCIENCE.get(), HatOfOmniscienceRenderer::new);
+        RelicsRelicRenderers.register(RISASItems.MASK_OF_HUNGER.get(), MaskOfHungerRenderer::new);
+        RelicsRelicRenderers.register(RISASItems.SINNER_CROWN.get(), SinnerCrownRenderer::new);
+    }
+
+    @SubscribeEvent
+    public static void registerLayers(final EntityRenderersEvent.RegisterLayerDefinitions event) {
+        event.registerLayerDefinition(CloakOfTheBloodyFeatherModel.LAYER, CloakOfTheBloodyFeatherModel::constructLayerDefinition);
+        event.registerLayerDefinition(HatOfOmniscienceModel.LAYER, HatOfOmniscienceModel::constructLayerDefinition);
+        event.registerLayerDefinition(MaskOfHungerModel.LAYER, MaskOfHungerModel::constructLayerDefinition);
+        event.registerLayerDefinition(SinnerCrownModel.LAYER, SinnerCrownModel::constructLayerDefinition);
     }
 
     @SubscribeEvent

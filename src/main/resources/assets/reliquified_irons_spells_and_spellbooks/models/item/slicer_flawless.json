@@ -1,0 +1,21 @@
+{
+  "parent": "neoforge:item/default",
+  "base": {
+    "parent": "reliquified_irons_spells_and_spellbooks:item/slicer_3d_flawless"
+  },
+  "textures": {
+    "particle": "reliquified_irons_spells_and_spellbooks:item/slicer"
+  },
+  "loader": "neoforge:separate_transforms",
+  "perspectives": {
+    "ground": {
+      "parent": "reliquified_irons_spells_and_spellbooks:item/slicer_2d_flawless"
+    },
+    "gui": {
+      "parent": "reliquified_irons_spells_and_spellbooks:item/slicer_2d_flawless"
+    },
+    "fixed": {
+      "parent": "reliquified_irons_spells_and_spellbooks:item/slicer_2d_flawless"
+    }
+  }
+}
