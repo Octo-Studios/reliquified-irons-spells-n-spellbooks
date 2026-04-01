@@ -29,6 +29,7 @@ import it.hurts.sskirillss.relics.items.misc.CreativeContentConstructor;
 import it.hurts.sskirillss.relics.items.misc.ICreativeTabContent;
 import it.hurts.sskirillss.relics.items.relics.base.data.loot.LootTemplate;
 import it.hurts.sskirillss.relics.utils.MathUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -309,6 +310,57 @@ public class ShadowClawsItem extends ExtendedSwordItem implements IRelicItem, IC
     @Override
     public void gatherCreativeTabContent(CreativeContentConstructor creativeContentConstructor) {
         creativeContentConstructor.entry(RelicsCreativeTabs.RELICS_TAB.get(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS, this);
+    }
+
+    @Override
+    public boolean isBarVisible(ItemStack stack) {
+        var minecraft = Minecraft.getInstance();
+        var level = minecraft.level;
+        var player = minecraft.player;
+
+        if (level == null || player == null)
+            return false;
+
+        var ability = this.getRelicData(player, stack).getAbilitiesData().getAbilityData("shadow_slash");
+
+        if (!ability.canPlayerUse(player))
+            return false;
+
+        return this.getBarWidth(stack) < 13;
+    }
+
+    @Override
+    public int getBarWidth(ItemStack stack) {
+        var minecraft = Minecraft.getInstance();
+        var level = minecraft.level;
+        var player = minecraft.player;
+
+        if (level == null || player == null)
+            return 0;
+
+        var ability = this.getRelicData(player, stack).getAbilitiesData().getAbilityData("shadow_slash");
+
+        if (!ability.canPlayerUse(player))
+            return 0;
+
+        var maxCharges = Math.max(1D, ability.getStatData("max_charges").getValue());
+        var rechargeTicks = Math.max(1L, Math.round(Math.max(0D, ability.getStatData("charge_regen_time").getValue()) * 20D));
+        var charges = stack.get(RISASDataComponents.SHADOW_CLAWS_CHARGES.get());
+        var lastUpdate = stack.get(RISASDataComponents.SHADOW_CLAWS_LAST_UPDATE.get());
+        var currentCharges = charges == null || lastUpdate == null
+                ? maxCharges
+                : Math.min(maxCharges, Math.max(0D, charges) + (double) Math.max(0L, level.getGameTime() - lastUpdate) / (double) rechargeTicks);
+        var maxChargeCount = Math.max(1, (int) Math.floor(maxCharges + 1.0E-6D));
+        var currentChargeCount = Math.max(0, Math.min(maxChargeCount, (int) Math.floor(currentCharges + 1.0E-6D)));
+        var progress = Mth.clamp((float) currentChargeCount / (float) maxChargeCount, 0F, 1F);
+
+        return Mth.clamp(Math.round(progress * 13F), 0, 13);
+    }
+
+    @Override
+    public int getBarColor(ItemStack stack) {
+        var progress = Mth.clamp((float) this.getBarWidth(stack) / 13F, 0F, 1F);
+        return Mth.hsvToRgb(progress / 3F, 1F, 1F);
     }
 
     @Override
