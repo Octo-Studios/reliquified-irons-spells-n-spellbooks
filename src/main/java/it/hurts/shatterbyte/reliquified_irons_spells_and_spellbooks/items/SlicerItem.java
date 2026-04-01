@@ -548,6 +548,79 @@ public class SlicerItem extends ExtendedSwordItem implements IRelicItem, ICreati
     }
 
     @Override
+    public boolean isBarVisible(ItemStack stack) {
+        var minecraft = Minecraft.getInstance();
+        var level = minecraft.level;
+
+        if (level == null)
+            return false;
+
+        return stack.getOrDefault(RISASDataComponents.SLICER_COOLDOWN_UNTIL.get(), 0L) > level.getGameTime();
+    }
+
+    @Override
+    public int getBarWidth(ItemStack stack) {
+        var minecraft = Minecraft.getInstance();
+        var level = minecraft.level;
+        var player = minecraft.player;
+
+        if (level == null || player == null)
+            return 0;
+
+        var cooldownUntil = stack.getOrDefault(RISASDataComponents.SLICER_COOLDOWN_UNTIL.get(), 0L);
+        var remaining = Math.max(0L, cooldownUntil - level.getGameTime());
+
+        if (remaining <= 0L)
+            return 0;
+
+        var duration = Math.max(
+                1L,
+                Math.round(
+                        Math.max(
+                                0D,
+                                this.getRelicData(player, stack)
+                                        .getAbilitiesData()
+                                        .getAbilityData("slicer")
+                                        .getStatData("cooldown")
+                                        .getValue()
+                        ) * 20D
+                )
+        );
+        var elapsed = Math.max(0L, duration - remaining);
+        return Mth.clamp((int) Math.round((double) elapsed * 13D / (double) duration), 1, 13);
+    }
+
+    @Override
+    public int getBarColor(ItemStack stack) {
+        var minecraft = Minecraft.getInstance();
+        var level = minecraft.level;
+        var player = minecraft.player;
+
+        if (level == null || player == null)
+            return 0xFF0000;
+
+        var cooldownUntil = stack.getOrDefault(RISASDataComponents.SLICER_COOLDOWN_UNTIL.get(), 0L);
+        var remaining = Math.max(0L, cooldownUntil - level.getGameTime());
+        var duration = Math.max(
+                1L,
+                Math.round(
+                        Math.max(
+                                0D,
+                                this.getRelicData(player, stack)
+                                        .getAbilitiesData()
+                                        .getAbilityData("slicer")
+                                        .getStatData("cooldown")
+                                        .getValue()
+                        ) * 20D
+                )
+        );
+        var elapsed = Math.max(0L, duration - remaining);
+        var progress = Mth.clamp((float) elapsed / (float) duration, 0F, 1F);
+
+        return Mth.hsvToRgb(progress / 3F, 1F, 1F);
+    }
+
+    @Override
     public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
         return slotChanged;
     }
