@@ -666,7 +666,7 @@ public class RISASDataComponents {
         );
     }
 
-    public record SlicerStateData(ResourceKey<Level> level, double centerX, double centerY, double centerZ, double radius, long nextActionTick, int intervalTicks, List<UUID> attackedTargets) {
+    public record SlicerStateData(ResourceKey<Level> level, double centerX, double centerY, double centerZ, double radius, long nextActionTick, int intervalTicks, float initialYaw, float initialPitch, List<UUID> attackedTargets) {
         public static final Codec<SlicerStateData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 Level.RESOURCE_KEY_CODEC.fieldOf("level").forGetter(SlicerStateData::level),
                 Codec.DOUBLE.fieldOf("center_x").forGetter(SlicerStateData::centerX),
@@ -675,6 +675,8 @@ public class RISASDataComponents {
                 Codec.DOUBLE.fieldOf("radius").forGetter(SlicerStateData::radius),
                 Codec.LONG.fieldOf("next_action_tick").forGetter(SlicerStateData::nextActionTick),
                 Codec.INT.fieldOf("interval_ticks").forGetter(SlicerStateData::intervalTicks),
+                Codec.FLOAT.optionalFieldOf("initial_yaw", 0F).forGetter(SlicerStateData::initialYaw),
+                Codec.FLOAT.optionalFieldOf("initial_pitch", 0F).forGetter(SlicerStateData::initialPitch),
                 UUIDUtil.CODEC.listOf().fieldOf("attacked_targets").forGetter(SlicerStateData::attackedTargets)
         ).apply(instance, SlicerStateData::new));
 
@@ -689,6 +691,8 @@ public class RISASDataComponents {
                         ByteBufCodecs.DOUBLE.decode(buffer),
                         ByteBufCodecs.VAR_LONG.decode(buffer),
                         ByteBufCodecs.VAR_INT.decode(buffer),
+                        ByteBufCodecs.FLOAT.decode(buffer),
+                        ByteBufCodecs.FLOAT.decode(buffer),
                         UUIDUtil.STREAM_CODEC.apply(ByteBufCodecs.list()).decode(buffer)
                 );
             }
@@ -702,6 +706,8 @@ public class RISASDataComponents {
                 ByteBufCodecs.DOUBLE.encode(buffer, value.radius());
                 ByteBufCodecs.VAR_LONG.encode(buffer, value.nextActionTick());
                 ByteBufCodecs.VAR_INT.encode(buffer, value.intervalTicks());
+                ByteBufCodecs.FLOAT.encode(buffer, value.initialYaw());
+                ByteBufCodecs.FLOAT.encode(buffer, value.initialPitch());
                 UUIDUtil.STREAM_CODEC.apply(ByteBufCodecs.list()).encode(buffer, value.attackedTargets());
             }
         };

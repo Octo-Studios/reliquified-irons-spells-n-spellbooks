@@ -190,6 +190,8 @@ public class SlicerItem extends ExtendedSwordItem implements IRelicItem, ICreati
                 player.teleportTo(safeDestination.x, safeDestination.y, safeDestination.z);
         }
 
+        player.connection.teleport(player.getX(), player.getY(), player.getZ(), state.initialYaw(), state.initialPitch());
+
         stack.remove(RISASDataComponents.SLICER_STATE.get());
         stack.remove(RISASDataComponents.SLICER_REVEAL_UNTIL.get());
         stack.remove(RISASDataComponents.SLICER_ACTIVE.get());
@@ -248,6 +250,8 @@ public class SlicerItem extends ExtendedSwordItem implements IRelicItem, ICreati
                             radius,
                             serverLevel.getGameTime(),
                             intervalTicks,
+                            player.getYHeadRot(),
+                            player.getXRot(),
                             java.util.List.of()
                     )
             );
@@ -469,6 +473,8 @@ public class SlicerItem extends ExtendedSwordItem implements IRelicItem, ICreati
                             state.radius(),
                             serverLevel.getGameTime() + intervalTicks,
                             intervalTicks,
+                            state.initialYaw(),
+                            state.initialPitch(),
                             java.util.List.copyOf(attacked)
                     )
             );
@@ -537,6 +543,8 @@ public class SlicerItem extends ExtendedSwordItem implements IRelicItem, ICreati
                         state.radius(),
                         nextActionTick,
                         intervalTicks,
+                        state.initialYaw(),
+                        state.initialPitch(),
                         List.copyOf(attacked)
                 )
         );
@@ -829,6 +837,8 @@ public class SlicerItem extends ExtendedSwordItem implements IRelicItem, ICreati
                                     state.radius(),
                                     serverLevel.getGameTime() + intervalTicks,
                                     intervalTicks,
+                                    state.initialYaw(),
+                                    state.initialPitch(),
                                     List.of()
                             )
                     );
