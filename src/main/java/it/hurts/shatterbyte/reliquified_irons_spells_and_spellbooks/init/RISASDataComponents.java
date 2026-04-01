@@ -206,8 +206,8 @@ public class RISASDataComponents {
             SlicerStateData.CODEC,
             SlicerStateData.STREAM_CODEC
     );
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Long>> SLICER_COOLDOWN_UNTIL = construct(
-            "slicer/cooldown_until",
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Long>> SLICER_COOLDOWN_TICKS = construct(
+            "slicer/cooldown_ticks",
             Codec.LONG,
             ByteBufCodecs.VAR_LONG
     );

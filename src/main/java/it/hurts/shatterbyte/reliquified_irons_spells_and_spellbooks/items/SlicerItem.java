@@ -27,6 +27,7 @@ import it.hurts.sskirillss.relics.items.misc.ICreativeTabContent;
 import it.hurts.sskirillss.relics.items.relics.base.data.loot.LootTemplate;
 import it.hurts.sskirillss.relics.utils.MathUtils;
 import it.hurts.sskirillss.relics.utils.ParticleUtils;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.component.DataComponents;
@@ -195,7 +196,7 @@ public class SlicerItem extends ExtendedSwordItem implements IRelicItem, ICreati
         stack.remove(RISASDataComponents.SLICER_STATE.get());
         stack.remove(RISASDataComponents.SLICER_REVEAL_UNTIL.get());
         stack.remove(RISASDataComponents.SLICER_ACTIVE.get());
-        stack.set(RISASDataComponents.SLICER_COOLDOWN_UNTIL.get(), player.level().getGameTime() + cooldownTicks);
+        stack.set(RISASDataComponents.SLICER_COOLDOWN_TICKS.get(), cooldownTicks);
         player.removeEffect(MobEffectRegistry.TRUE_INVISIBILITY);
     }
 
@@ -211,7 +212,7 @@ public class SlicerItem extends ExtendedSwordItem implements IRelicItem, ICreati
         if (hand != InteractionHand.MAIN_HAND)
             return InteractionResultHolder.pass(stack);
 
-        if (stack.getOrDefault(RISASDataComponents.SLICER_COOLDOWN_UNTIL.get(), 0L) > level.getGameTime() || stack.get(RISASDataComponents.SLICER_STATE.get()) != null)
+        if (stack.getOrDefault(RISASDataComponents.SLICER_COOLDOWN_TICKS.get(), 0L) > 0L || stack.get(RISASDataComponents.SLICER_STATE.get()) != null)
             return InteractionResultHolder.fail(stack);
 
         var relicData = this.getRelicData(player, stack);
@@ -268,22 +269,18 @@ public class SlicerItem extends ExtendedSwordItem implements IRelicItem, ICreati
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
         if (level.isClientSide()) {
-            var minecraft = Minecraft.getInstance();
-
-            if (!(entity instanceof Player player) || minecraft.player != player || minecraft.level == null)
-                return;
-
             if (!stack.getOrDefault(RISASDataComponents.SLICER_ACTIVE.get(), false))
                 return;
 
             var state = stack.get(RISASDataComponents.SLICER_STATE.get());
 
-            if (state == null || !state.level().equals(minecraft.level.dimension()))
+            if (state == null || !state.level().equals(level.dimension()))
                 return;
 
-            player.setDeltaMovement(Vec3.ZERO);
-            player.fallDistance = 0F;
-            player.hurtMarked = true;
+            entity.setDeltaMovement(Vec3.ZERO);
+            entity.fallDistance = 0F;
+            entity.hurtMarked = true;
+
             return;
         }
 
@@ -295,6 +292,18 @@ public class SlicerItem extends ExtendedSwordItem implements IRelicItem, ICreati
 
         if (stack.getOrDefault(DataComponents.DAMAGE, 0) > 0)
             stack.set(DataComponents.DAMAGE, 0);
+
+        var cooldownRemaining = stack.getOrDefault(RISASDataComponents.SLICER_COOLDOWN_TICKS.get(), 0L);
+
+        if (cooldownRemaining > 0L) {
+            cooldownRemaining--;
+
+            if (cooldownRemaining > 0L) {
+                stack.set(RISASDataComponents.SLICER_COOLDOWN_TICKS.get(), cooldownRemaining);
+            } else {
+                stack.remove(RISASDataComponents.SLICER_COOLDOWN_TICKS.get());
+            }
+        }
 
         var gameTime = level.getGameTime();
         var bladeAbility = this.getRelicData(player, stack).getAbilitiesData().getAbilityData("slicer_weapon");
@@ -503,7 +512,7 @@ public class SlicerItem extends ExtendedSwordItem implements IRelicItem, ICreati
                 var progress = (double) step / (double) steps;
                 var point = previousPosition.lerp(currentPosition, progress);
 
-                serverLevel.sendParticles(trailParticle, point.x, point.y, point.z, 1, 0,0,0, 0.0025D);
+                serverLevel.sendParticles(trailParticle, point.x, point.y, point.z, 1, 0, 0, 0, 0.0025D);
             }
         }
 
@@ -557,72 +566,35 @@ public class SlicerItem extends ExtendedSwordItem implements IRelicItem, ICreati
 
     @Override
     public boolean isBarVisible(ItemStack stack) {
-        var minecraft = Minecraft.getInstance();
-        var level = minecraft.level;
-
-        if (level == null)
-            return false;
-
-        return stack.getOrDefault(RISASDataComponents.SLICER_COOLDOWN_UNTIL.get(), 0L) > level.getGameTime();
+        return stack.getOrDefault(RISASDataComponents.SLICER_COOLDOWN_TICKS.get(), 0L) > 0L;
     }
 
     @Override
     public int getBarWidth(ItemStack stack) {
-        var minecraft = Minecraft.getInstance();
-        var level = minecraft.level;
-        var player = minecraft.player;
-
-        if (level == null || player == null)
-            return 0;
-
-        var cooldownUntil = stack.getOrDefault(RISASDataComponents.SLICER_COOLDOWN_UNTIL.get(), 0L);
-        var remaining = Math.max(0L, cooldownUntil - level.getGameTime());
+        var remaining = stack.getOrDefault(RISASDataComponents.SLICER_COOLDOWN_TICKS.get(), 0L);
 
         if (remaining <= 0L)
             return 0;
 
-        var duration = Math.max(
-                1L,
-                Math.round(
-                        Math.max(
-                                0D,
-                                this.getRelicData(player, stack)
-                                        .getAbilitiesData()
-                                        .getAbilityData("slicer")
-                                        .getStatData("cooldown")
-                                        .getValue()
-                        ) * 20D
-                )
-        );
-        var elapsed = Math.max(0L, duration - remaining);
+        var duration = Math.round(this.getRelicData(null, stack)
+                .getAbilitiesData()
+                .getAbilityData("slicer")
+                .getStatData("cooldown")
+                .getValue() * 20D);
+        var elapsed = duration - remaining;
+
         return Mth.clamp((int) Math.round((double) elapsed * 13D / (double) duration), 1, 13);
     }
 
     @Override
     public int getBarColor(ItemStack stack) {
-        var minecraft = Minecraft.getInstance();
-        var level = minecraft.level;
-        var player = minecraft.player;
-
-        if (level == null || player == null)
-            return 0xFF0000;
-
-        var cooldownUntil = stack.getOrDefault(RISASDataComponents.SLICER_COOLDOWN_UNTIL.get(), 0L);
-        var remaining = Math.max(0L, cooldownUntil - level.getGameTime());
-        var duration = Math.max(
-                1L,
-                Math.round(
-                        Math.max(
-                                0D,
-                                this.getRelicData(player, stack)
-                                        .getAbilitiesData()
-                                        .getAbilityData("slicer")
-                                        .getStatData("cooldown")
-                                        .getValue()
-                        ) * 20D
-                )
-        );
-        var elapsed = Math.max(0L, duration - remaining);
+        var remaining = stack.getOrDefault(RISASDataComponents.SLICER_COOLDOWN_TICKS.get(), 0L);
+        var duration = Math.round(this.getRelicData(null, stack)
+                .getAbilitiesData()
+                .getAbilityData("slicer")
+                .getStatData("cooldown")
+                .getValue() * 20D);
+        var elapsed = duration - remaining;
         var progress = Mth.clamp((float) elapsed / (float) duration, 0F, 1F);
 
         return Mth.hsvToRgb(progress / 3F, 1F, 1F);
