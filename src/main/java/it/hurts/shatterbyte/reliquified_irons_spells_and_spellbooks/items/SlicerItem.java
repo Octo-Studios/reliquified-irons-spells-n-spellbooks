@@ -388,23 +388,6 @@ public class SlicerItem extends ExtendedSwordItem implements IRelicItem, ICreati
             player.addEffect(new MobEffectInstance(MobEffectRegistry.TRUE_INVISIBILITY, 15, 0, false, false, true));
         }
 
-        var outline = ParticleUtils.constructSimpleSpark(new Color(176, 32, 52), 1F, 1, 1F);
-        var points = Math.max(64, (int) Math.round(state.radius() * 40D));
-
-        var time = player.tickCount * 0.25D;
-
-        for (var point = 0; point < points; point++) {
-            var angle = (Math.PI * 2D * point) / points;
-
-            var wave = Math.sin(angle * 6 + time) * 0.35D;
-            var radius = state.radius() + wave;
-
-            var x = state.centerX() + Math.cos(angle) * radius;
-            var z = state.centerZ() + Math.sin(angle) * radius;
-
-            serverLevel.sendParticles(outline, x, state.centerY() + 0.15D, z, 1, 0.01D, 0.01D, 0.01D, 0D);
-        }
-
         if (serverLevel.getGameTime() < state.nextActionTick())
             return;
 
