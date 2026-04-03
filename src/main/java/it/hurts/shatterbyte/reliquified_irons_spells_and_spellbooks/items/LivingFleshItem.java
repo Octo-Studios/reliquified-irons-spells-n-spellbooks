@@ -19,6 +19,7 @@ import it.hurts.sskirillss.relics.api.relics.abilities.stats.AbilityStatTemplate
 import it.hurts.sskirillss.relics.api.relics.data.AbilityData;
 import it.hurts.sskirillss.relics.init.RelicsScalingModels;
 import it.hurts.sskirillss.relics.items.relics.base.data.loot.LootTemplate;
+import it.hurts.sskirillss.relics.items.relics.base.data.research.ResearchTemplate;
 import it.hurts.sskirillss.relics.utils.EntityUtils;
 import it.hurts.sskirillss.relics.utils.MathUtils;
 import net.minecraft.server.level.ServerLevel;
@@ -100,6 +101,10 @@ public class LivingFleshItem extends ISASWearableRelicItem {
                                                 .formatValue(value -> String.valueOf(MathUtils.round(value, 2)))
                                                 .rankModifierVisibilityState("vital_feast", VisibilityState.OBFUSCATED)
                                                 .build())
+                                        .build())
+                                .research(ResearchTemplate.builder()
+                                        .star(0, 1, 8).star(1, 7, 8).star(2, 11, 7).star(3, 13, 5).star(4, 14, 1).star(5, 16, 8).star(6, 10, 11).star(7, 3, 13).star(8, 3, 23).star(9, 8, 24).star(10, 14, 21).star(11, 18, 16).star(12, 14, 18).star(13, 11, 20).star(14, 19, 12).star(15, 2, 20).star(16, 5, 21)
+                                        .link(0, 1).link(1, 2).link(2, 3).link(3, 4).link(3, 5).link(6, 2).link(1, 7).link(8, 9).link(9, 13).link(9, 10).link(10, 12).link(10, 11).link(11, 14).link(8, 15).link(8, 16)
                                         .build())
                                 .build())
                         .build())

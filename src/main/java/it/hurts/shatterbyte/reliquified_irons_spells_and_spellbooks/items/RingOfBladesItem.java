@@ -19,6 +19,7 @@ import it.hurts.sskirillss.relics.api.relics.abilities.stats.AbilityStatTemplate
 import it.hurts.sskirillss.relics.api.relics.data.AbilityData;
 import it.hurts.sskirillss.relics.init.RelicsScalingModels;
 import it.hurts.sskirillss.relics.items.relics.base.data.loot.LootTemplate;
+import it.hurts.sskirillss.relics.items.relics.base.data.research.ResearchTemplate;
 import it.hurts.sskirillss.relics.utils.EntityUtils;
 import it.hurts.sskirillss.relics.utils.MathUtils;
 import net.minecraft.server.level.ServerLevel;
@@ -89,6 +90,10 @@ public class RingOfBladesItem extends ISASWearableRelicItem {
                                                 .formatValue(value -> String.valueOf(MathUtils.round(value, 2)))
                                                 .rankModifierVisibilityState("blade_leech", VisibilityState.OBFUSCATED)
                                                 .build())
+                                        .build())
+                                .research(ResearchTemplate.builder()
+                                        .star(0, 15, 25).star(1, 1, 8).star(2, 12, 21).star(3, 9, 24).star(4, 16, 18).star(5, 6, 15).star(6, 3, 11).star(7, 19, 3).star(8, 18, 9).star(9, 9, 18).star(10, 14, 2).star(11, 5, 5)
+                                        .link(0, 2).link(3, 2).link(2, 4).link(2, 9).link(9, 8).link(9, 5).link(5, 7).link(5, 6).link(6, 1).link(6, 10).link(1, 11)
                                         .build())
                                 .build())
                         .build())

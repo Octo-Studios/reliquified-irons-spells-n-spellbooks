@@ -26,6 +26,7 @@ import it.hurts.sskirillss.relics.api.relics.abilities.ExperienceSourcesTemplate
 import it.hurts.sskirillss.relics.api.relics.abilities.stats.AbilityStatTemplate;
 import it.hurts.sskirillss.relics.init.RelicsScalingModels;
 import it.hurts.sskirillss.relics.items.relics.base.data.loot.LootTemplate;
+import it.hurts.sskirillss.relics.items.relics.base.data.research.ResearchTemplate;
 import it.hurts.sskirillss.relics.utils.EntityUtils;
 import it.hurts.sskirillss.relics.utils.MathUtils;
 import net.minecraft.server.level.ServerLevel;
@@ -95,6 +96,10 @@ public class SinnerCrownItem extends ISASWearableRelicItem {
                                                 .formatValue(value -> String.valueOf(MathUtils.round(value, 2)))
                                                 .rankModifierVisibilityState("shared_pain", VisibilityState.OBFUSCATED)
                                                 .build())
+                                        .build())
+                                .research(ResearchTemplate.builder()
+                                        .star(0, 8, 25).star(1, 20, 25).star(2, 13, 25).star(3, 13, 21).star(4, 12, 17).star(5, 16, 16).star(6, 18, 17).star(7, 18, 20).star(8, 6, 22).star(9, 3, 18).star(10, 3, 11).star(11, 7, 9).star(12, 11, 13)
+                                        .link(0, 2).link(2, 1).link(2, 3).link(3, 4).link(3, 5).link(3, 6).link(3, 7).link(8, 9).link(10, 9).link(10, 11).link(11, 12).link(12, 4).link(4, 8)
                                         .build())
                                 .build())
                         .build())

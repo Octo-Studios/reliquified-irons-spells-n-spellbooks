@@ -19,6 +19,7 @@ import it.hurts.sskirillss.relics.api.relics.data.AbilityData;
 import it.hurts.sskirillss.relics.init.RelicsMobEffects;
 import it.hurts.sskirillss.relics.init.RelicsScalingModels;
 import it.hurts.sskirillss.relics.items.relics.base.data.loot.LootTemplate;
+import it.hurts.sskirillss.relics.items.relics.base.data.research.ResearchTemplate;
 import it.hurts.sskirillss.relics.utils.EntityUtils;
 import it.hurts.sskirillss.relics.utils.MathUtils;
 import net.minecraft.resources.ResourceKey;
@@ -94,6 +95,10 @@ public class CloakOfTheBloodyFeatherItem extends ISASWearableRelicItem {
                                                 .formatValue(value -> MathUtils.formatTime(Math.max(0, (int) MathUtils.round(value, 0))))
                                                 .rankModifierVisibilityState("needle_bleeding", VisibilityState.OBFUSCATED)
                                                 .build())
+                                        .build())
+                                .research(ResearchTemplate.builder()
+                                        .star(0, 4, 22).star(1, 17, 6).star(2, 10, 13).star(3, 5, 15).star(4, 10, 17).star(5, 11, 8).star(6, 15, 11)
+                                        .link(0, 2).link(2, 1).link(0, 3).link(0, 4).link(2, 5).link(2, 6)
                                         .build())
                                 .build())
                         .build())

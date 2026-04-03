@@ -25,6 +25,7 @@ import it.hurts.sskirillss.relics.init.RelicsScalingModels;
 import it.hurts.sskirillss.relics.items.misc.CreativeContentConstructor;
 import it.hurts.sskirillss.relics.items.misc.ICreativeTabContent;
 import it.hurts.sskirillss.relics.items.relics.base.data.loot.LootTemplate;
+import it.hurts.sskirillss.relics.items.relics.base.data.research.ResearchTemplate;
 import it.hurts.sskirillss.relics.utils.MathUtils;
 import it.hurts.sskirillss.relics.utils.ParticleUtils;
 
@@ -109,6 +110,10 @@ public class SlicerItem extends ExtendedSwordItem implements IRelicItem, ICreati
                                                 .formatValue(value -> String.valueOf(Math.max(0, (int) MathUtils.round(value, 0))))
                                                 .build())
                                         .build())
+                                .research(ResearchTemplate.builder()
+                                        .star(0, 9, 22).star(1, 19, 13).star(2, 17, 9).star(3, 3, 22).star(4, 4, 14).star(5, 11, 6).star(6, 6, 9).star(7, 9, 14).star(8, 13, 16)
+                                        .link(4, 6).link(6, 5).link(3, 7).link(7, 2).link(0, 8).link(8, 1)
+                                        .build())
                                 .build())
                         .ability(AbilityTemplate.builder("slicer")
                                 .rankModifier(1, "unstable_mark")
@@ -153,6 +158,10 @@ public class SlicerItem extends ExtendedSwordItem implements IRelicItem, ICreati
                                         .metric(AbilityMetricTemplate.builder("damage_dealt")
                                                 .formatValue(value -> String.valueOf(MathUtils.round(value, 2)))
                                                 .build())
+                                        .build())
+                                .research(ResearchTemplate.builder()
+                                        .star(0, 3, 22).star(1, 11, 4).star(2, 18, 22).star(3, 1, 11).star(4, 20, 11).star(5, 4, 6).star(6, 17, 6).star(7, 20, 18).star(8, 11, 24).star(9, 1, 18)
+                                        .link(0, 1).link(1, 2).link(2, 3).link(3, 4).link(4, 0).link(3, 9).link(9, 0).link(0, 8).link(8, 2).link(2, 7).link(7, 4).link(4, 6).link(6, 1).link(1, 5).link(5, 3)
                                         .build())
                                 .build())
                         .build())

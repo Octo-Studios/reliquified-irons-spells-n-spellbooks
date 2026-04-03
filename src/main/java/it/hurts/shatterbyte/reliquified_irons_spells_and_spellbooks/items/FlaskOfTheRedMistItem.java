@@ -22,6 +22,7 @@ import it.hurts.sskirillss.relics.api.relics.abilities.stats.AbilityStatTemplate
 import it.hurts.sskirillss.relics.api.relics.data.AbilityData;
 import it.hurts.sskirillss.relics.init.RelicsScalingModels;
 import it.hurts.sskirillss.relics.items.relics.base.data.loot.LootTemplate;
+import it.hurts.sskirillss.relics.items.relics.base.data.research.ResearchTemplate;
 import it.hurts.sskirillss.relics.utils.EntityUtils;
 import it.hurts.sskirillss.relics.utils.MathUtils;
 import net.minecraft.core.BlockPos;
@@ -93,6 +94,10 @@ public class FlaskOfTheRedMistItem extends ISASWearableRelicItem {
                                                 .formatValue(value -> String.valueOf(MathUtils.round(value, 2)))
                                                 .rankModifierVisibilityState("execution_window", VisibilityState.OBFUSCATED)
                                                 .build())
+                                        .build())
+                                .research(ResearchTemplate.builder()
+                                        .star(0, 16, 4).star(1, 18, 7).star(2, 4, 24).star(3, 8, 24).star(4, 3, 17).star(5, 8, 7).star(6, 13, 7).star(7, 17, 11).star(8, 14, 17).star(9, 5, 11).star(10, 8, 17).star(11, 11, 20)
+                                        .link(5, 9).link(9, 10).link(10, 11).link(11, 8).link(8, 7).link(7, 6).link(6, 5).link(4, 10).link(4, 3).link(3, 2).link(6, 1).link(1, 0)
                                         .build())
                                 .build())
                         .build())

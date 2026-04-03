@@ -23,6 +23,7 @@ import it.hurts.sskirillss.relics.api.relics.data.AbilityData;
 import it.hurts.sskirillss.relics.init.RelicsMobEffects;
 import it.hurts.sskirillss.relics.init.RelicsScalingModels;
 import it.hurts.sskirillss.relics.items.relics.base.data.loot.LootTemplate;
+import it.hurts.sskirillss.relics.items.relics.base.data.research.ResearchTemplate;
 import it.hurts.sskirillss.relics.utils.EntityUtils;
 import it.hurts.sskirillss.relics.utils.MathUtils;
 import net.minecraft.server.level.ServerPlayer;
@@ -103,6 +104,10 @@ public class MaskOfHungerItem extends ISASWearableRelicItem {
                                                 .formatValue(value -> MathUtils.formatTime(Math.max(0, (int) MathUtils.round(value, 0))))
                                                 .rankModifierVisibilityState("paralyzing_beam", VisibilityState.OBFUSCATED)
                                                 .build())
+                                        .build())
+                                .research(ResearchTemplate.builder()
+                                        .star(0, 5, 25).star(1, 18, 19).star(2, 18, 13).star(3, 12, 13).star(4, 7, 10).star(5, 3, 14).star(6, 11, 18)
+                                        .link(5, 0).link(1, 2).link(3, 4).link(4, 5).link(3, 2).link(0, 6).link(6, 1)
                                         .build())
                                 .build())
                         .build())

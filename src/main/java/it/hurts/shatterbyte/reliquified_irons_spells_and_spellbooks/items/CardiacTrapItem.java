@@ -23,6 +23,7 @@ import it.hurts.sskirillss.relics.api.relics.data.AbilityData;
 import it.hurts.sskirillss.relics.init.RelicsMobEffects;
 import it.hurts.sskirillss.relics.init.RelicsScalingModels;
 import it.hurts.sskirillss.relics.items.relics.base.data.loot.LootTemplate;
+import it.hurts.sskirillss.relics.items.relics.base.data.research.ResearchTemplate;
 import it.hurts.sskirillss.relics.utils.EntityUtils;
 import it.hurts.sskirillss.relics.utils.MathUtils;
 import net.minecraft.server.level.ServerPlayer;
@@ -102,6 +103,10 @@ public class CardiacTrapItem extends ISASWearableRelicItem {
                                                 .formatValue(value -> String.valueOf(Math.max(0, (int) MathUtils.round(value, 0))))
                                                 .rankModifierVisibilityState("paralyzing_pulse", VisibilityState.OBFUSCATED)
                                                 .build())
+                                        .build())
+                                .research(ResearchTemplate.builder()
+                                        .star(0, 6, 17).star(1, 18, 10).star(2, 12, 13).star(3, 4, 7).star(4, 17, 15).star(5, 10, 20).star(6, 11, 8).star(7, 16, 7).star(8, 1, 24).star(9, 20, 24)
+                                        .link(3, 6).link(1, 4).link(4, 5).link(5, 0).link(0, 3).link(6, 7).link(7, 1).link(1, 2).link(2, 0).link(3, 2).link(2, 4).link(9, 8)
                                         .build())
                                 .build())
                         .build())

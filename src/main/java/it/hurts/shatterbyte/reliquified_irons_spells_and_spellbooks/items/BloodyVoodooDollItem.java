@@ -21,6 +21,7 @@ import it.hurts.sskirillss.relics.api.relics.abilities.stats.AbilityStatTemplate
 import it.hurts.sskirillss.relics.api.relics.data.AbilityData;
 import it.hurts.sskirillss.relics.init.RelicsScalingModels;
 import it.hurts.sskirillss.relics.items.relics.base.data.loot.LootTemplate;
+import it.hurts.sskirillss.relics.items.relics.base.data.research.ResearchTemplate;
 import it.hurts.sskirillss.relics.utils.EntityUtils;
 import it.hurts.sskirillss.relics.utils.MathUtils;
 import net.minecraft.server.level.ServerLevel;
@@ -114,6 +115,10 @@ public class BloodyVoodooDollItem extends ISASWearableRelicItem {
                                                 .formatValue(value -> String.valueOf(Math.max(0, (int) MathUtils.round(value, 0))))
                                                 .rankModifierVisibilityState("needle_ricochet", VisibilityState.OBFUSCATED)
                                                 .build())
+                                        .build())
+                                .research(ResearchTemplate.builder()
+                                        .star(0, 7, 27).star(1, 17, 3).star(2, 13, 24).star(3, 17, 20).star(4, 12, 15).star(5, 13, 10).star(6, 6, 20).star(7, 5, 9)
+                                        .link(2, 4).link(4, 3).link(4, 5).link(5, 1).link(4, 0).link(4, 6).link(4, 7)
                                         .build())
                                 .build())
                         .build())
