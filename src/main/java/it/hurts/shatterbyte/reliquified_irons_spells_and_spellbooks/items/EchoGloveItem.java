@@ -169,7 +169,7 @@ public class EchoGloveItem extends ISASWearableRelicItem {
                 return;
 
             if (isEchoStrike && target.isAlive() && target.onGround()) {
-                if (ability.isRankModifierUnlocked("launch_echo")) {
+                if (ability.getRankModifierData("launch_echo").isEnabled()) {
                     var launchHeight = Math.max(0D, ability.getStatData("launch_height").getValue());
 
                     if (launchHeight > 0D) {
@@ -191,7 +191,7 @@ public class EchoGloveItem extends ISASWearableRelicItem {
                     }
                 }
 
-                if (ability.isRankModifierUnlocked("stunning_echo")) {
+                if (ability.getRankModifierData("stunning_echo").isEnabled()) {
                     var stunTicks = Math.max(0, (int) Math.round(Math.max(0D, ability.getStatData("stun_duration").getValue()) * 20D));
 
                     if (stunTicks > 0) {
@@ -202,7 +202,7 @@ public class EchoGloveItem extends ISASWearableRelicItem {
 
             }
 
-            if (isEchoStrike && !ability.isRankModifierUnlocked("chain_echo"))
+            if (isEchoStrike && !ability.getRankModifierData("chain_echo").isEnabled())
                 return;
 
             var echoChance = Mth.clamp(ability.getStatData("echo_chance").getValue(), 0D, 1D);
@@ -282,7 +282,7 @@ public class EchoGloveItem extends ISASWearableRelicItem {
 
                         var ability = item.getRelicData(owner, stack).getAbilitiesData().getAbilityData("echo_glove");
 
-                        if (!ability.canPlayerUse(owner) || !ability.isRankModifierUnlocked("launch_echo"))
+                        if (!ability.canPlayerUse(owner) || !ability.getRankModifierData("launch_echo").isEnabled())
                             continue;
 
                         ability.getStatisticData().getMetricData("launch_echo_fall_damage").addValue(event.getAmount());

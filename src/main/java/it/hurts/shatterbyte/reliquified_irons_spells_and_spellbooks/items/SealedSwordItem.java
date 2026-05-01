@@ -402,7 +402,7 @@ public class SealedSwordItem extends ISASWearableRelicItem {
                 relicData.getLevelingData().addExperience("sealed_sword", "summoned_sword_attack", 1D);
                 ability.getStatisticData().getMetricData("sword_damage_dealt").addValue(event.getNewDamage());
 
-                if (ability.isRankModifierUnlocked("heal_strike")) {
+                if (ability.getRankModifierData("heal_strike").isEnabled()) {
                     var heal = Math.max(0D, ability.getStatData("heal_on_hit").getValue());
 
                     if (heal > 0D) {
@@ -412,7 +412,7 @@ public class SealedSwordItem extends ISASWearableRelicItem {
                     }
                 }
 
-                if (ability.isRankModifierUnlocked("disorient_strike") && event.getEntity() instanceof Mob mob) {
+                if (ability.getRankModifierData("disorient_strike").isEnabled() && event.getEntity() instanceof Mob mob) {
                     var chance = Math.max(0D, Math.min(1D, ability.getStatData("lose_target_chance").getValue()));
 
                     if (chance > 0D && mob.getRandom().nextDouble() <= chance) {
@@ -481,7 +481,7 @@ public class SealedSwordItem extends ISASWearableRelicItem {
 
                 var ability = item.getRelicData(player, stack).getAbilitiesData().getAbilityData("sealed_sword");
 
-                if (!ability.canPlayerUse(player) || "disabled".equals(ability.getMode()) || !ability.isRankModifierUnlocked("sword_power_aura"))
+                if (!ability.canPlayerUse(player) || "disabled".equals(ability.getMode()) || !ability.getRankModifierData("sword_power_aura").isEnabled())
                     continue;
 
                 var radius = Math.max(0D, ability.getStatData("aura_radius").getValue());

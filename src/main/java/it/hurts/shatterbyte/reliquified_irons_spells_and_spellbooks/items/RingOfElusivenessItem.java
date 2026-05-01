@@ -270,7 +270,7 @@ public class RingOfElusivenessItem extends ISASWearableRelicItem {
             if (preventedDamage > 0F)
                 ability.getStatisticData().getMetricData("dodged_damage").addValue(preventedDamage);
 
-            if (ability.isRankModifierUnlocked("restorative_evasion")) {
+            if (ability.getRankModifierData("restorative_evasion").isEnabled()) {
                 var heal = Math.max(0D, ability.getStatData("heal_on_evasion").getValue());
 
                 if (heal > 0D) {
@@ -280,7 +280,7 @@ public class RingOfElusivenessItem extends ISASWearableRelicItem {
                 }
             }
 
-            if (ability.isRankModifierUnlocked("vanishing_step")) {
+            if (ability.getRankModifierData("vanishing_step").isEnabled()) {
                 var vanishTicks = Math.max(0, (int) Math.round(Math.max(0D, ability.getStatData("vanish_duration").getValue()) * 20D));
 
                 if (vanishTicks > 0) {
@@ -289,7 +289,7 @@ public class RingOfElusivenessItem extends ISASWearableRelicItem {
                 }
             }
 
-            if (ability.isRankModifierUnlocked("ambush_window")) {
+            if (ability.getRankModifierData("ambush_window").isEnabled()) {
                 var windowTicks = Math.max(0L, Math.round(Math.max(0D, ability.getStatData("ambush_window").getValue()) * 20D));
 
                 if (windowTicks > 0L)
@@ -317,7 +317,7 @@ public class RingOfElusivenessItem extends ISASWearableRelicItem {
 
                 var candidateAbility = item.getRelicData(player, candidateStack).getAbilitiesData().getAbilityData("elusiveness");
 
-                if (!candidateAbility.canPlayerUse(player) || !candidateAbility.isRankModifierUnlocked("ambush_window"))
+                if (!candidateAbility.canPlayerUse(player) || !candidateAbility.getRankModifierData("ambush_window").isEnabled())
                     continue;
 
                 var bonusUntil = candidateStack.getOrDefault(RISASDataComponents.RING_OF_ELUSIVENESS_BONUS_UNTIL.get(), 0L);

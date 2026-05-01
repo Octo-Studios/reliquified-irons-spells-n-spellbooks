@@ -437,14 +437,14 @@ public class DimensionKeyItem extends ISASRelicItem {
             if (!(entity instanceof LivingEntity living))
                 continue;
 
-            if (living == serverPlayer && ability.isRankModifierUnlocked("immortal_crossing")) {
+            if (living == serverPlayer && ability.getRankModifierData("immortal_crossing").isEnabled()) {
                 var ticks = Math.max(0, (int) Math.round(Math.max(0D, ability.getStatData("immortality_duration").getValue()) * 20D));
 
                 if (ticks > 0) {
                     serverPlayer.addEffect(new MobEffectInstance(RelicsMobEffects.IMMORTALITY, ticks, 0, false, true, true), serverPlayer);
                     ability.getStatisticData().getMetricData("immortality_duration_total").addValue(ticks / 20D);
                 }
-            } else if (!(living instanceof Player) && ability.isRankModifierUnlocked("tremor_passage")) {
+            } else if (!(living instanceof Player) && ability.getRankModifierData("tremor_passage").isEnabled()) {
                 var ticks = Math.max(0, (int) Math.round(Math.max(0D, ability.getStatData("tremor_duration").getValue()) * 20D));
 
                 if (ticks > 0) {
@@ -522,7 +522,7 @@ public class DimensionKeyItem extends ISASRelicItem {
 
                 var ability = item.getRelicData(player, stack).getAbilitiesData().getAbilityData("dimension_key");
 
-                if (!ability.canPlayerUse(player) || !ability.isRankModifierUnlocked("vital_gate"))
+                if (!ability.canPlayerUse(player) || !ability.getRankModifierData("vital_gate").isEnabled())
                     continue;
 
                 var boost = Math.max(0D, ability.getStatData("regen_boost").getValue());
@@ -576,7 +576,7 @@ public class DimensionKeyItem extends ISASRelicItem {
 
                 var ability = item.getRelicData(player, stack).getAbilitiesData().getAbilityData("dimension_key");
 
-                if (!ability.canPlayerUse(player) || !ability.isRankModifierUnlocked("vital_gate"))
+                if (!ability.canPlayerUse(player) || !ability.getRankModifierData("vital_gate").isEnabled())
                     continue;
 
                 var boost = Math.max(0D, ability.getStatData("regen_boost").getValue());
@@ -627,7 +627,7 @@ public class DimensionKeyItem extends ISASRelicItem {
             if (bestItem != null && !bestStack.isEmpty() && bestAbility != null) {
                 var bonusHealing = Math.max(0D, event.getAmount() - originalAmount);
 
-                if (bonusHealing > 0D && bestAbility.isRankModifierUnlocked("vital_gate"))
+                if (bonusHealing > 0D && bestAbility.getRankModifierData("vital_gate").isEnabled())
                     bestAbility.getStatisticData().getMetricData("vital_gate_healing").addValue(bonusHealing);
             }
         }

@@ -237,13 +237,13 @@ public class CloakOfTheBloodyFeatherItem extends ISASWearableRelicItem {
                     relicData.getLevelingData().addExperience("blood_feather", "needle_hit", 1D);
                 }
 
-                if (!bestStack.isEmpty() && bestAbility != null && bestAbility.isRankModifierUnlocked("needle_recycle")) {
+                if (!bestStack.isEmpty() && bestAbility != null && bestAbility.getRankModifierData("needle_recycle").isEnabled()) {
                     var buffer = getBuffer(bestStack, level.dimension()).withAddedPendingNeedles(1);
 
                     setBuffer(bestStack, buffer);
                 }
 
-                if (event.getEntity().isAlive() && bestAbility != null && bestAbility.isRankModifierUnlocked("needle_bleeding")) {
+                if (event.getEntity().isAlive() && bestAbility != null && bestAbility.getRankModifierData("needle_bleeding").isEnabled()) {
                     var bleedingLevel = Math.max(1, (int) Math.round(Math.max(0D, bestAbility.getStatData("bleeding_level").getValue())));
                     var bleedingDurationTicks = Math.max(1, (int) Math.round(Math.max(0D, bestAbility.getStatData("bleeding_duration").getValue()) * 20D));
 
@@ -298,7 +298,7 @@ public class CloakOfTheBloodyFeatherItem extends ISASWearableRelicItem {
 
                     var ability = relic.getRelicData(owner, stack).getAbilitiesData().getAbilityData("blood_feather");
 
-                    if (!ability.canPlayerUse(owner) || !ability.isRankModifierUnlocked("execution_heal"))
+                    if (!ability.canPlayerUse(owner) || !ability.getRankModifierData("execution_heal").isEnabled())
                         continue;
 
                     var heal = Math.max(0D, ability.getStatData("kill_heal").getValue());

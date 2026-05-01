@@ -143,7 +143,7 @@ public class GalaxyDevourerDiademItem extends ISASWearableRelicItem {
         var mergedConsumed = new HashSet<UUID>();
         var forcedExpires = new HashMap<UUID, Long>();
 
-        if (ability.canPlayerUse(player) && ability.isRankModifierUnlocked("singularity_fusion")) {
+        if (ability.canPlayerUse(player) && ability.getRankModifierData("singularity_fusion").isEnabled()) {
             var fusionTransfer = Mth.clamp(ability.getStatData("fusion_transfer").getValue(), 0D, 1D);
 
             for (var entry : entries) {
@@ -236,7 +236,7 @@ public class GalaxyDevourerDiademItem extends ISASWearableRelicItem {
             var accumulatedDamage = Math.max(0D, damageTotals.getOrDefault(entry.blackHole(), 0D));
             damageTotals.remove(entry.blackHole());
 
-            if (!ability.canPlayerUse(player) || !ability.isRankModifierUnlocked("collapse_wave") || gameTime + 2L < entry.expiresAtTick())
+            if (!ability.canPlayerUse(player) || !ability.getRankModifierData("collapse_wave").isEnabled() || gameTime + 2L < entry.expiresAtTick())
                 continue;
 
             var collapseRadius = Math.max(0D, ability.getStatData("collapse_radius").getValue());
@@ -390,7 +390,7 @@ public class GalaxyDevourerDiademItem extends ISASWearableRelicItem {
 
                     var ability = item.getRelicData(owner, stack).getAbilitiesData().getAbilityData("galaxy_devourer_diadem");
 
-                    if (!ability.canPlayerUse(owner) || !ability.isRankModifierUnlocked("eternal_hunger"))
+                    if (!ability.canPlayerUse(owner) || !ability.getRankModifierData("eternal_hunger").isEnabled())
                         continue;
 
                     var extension = Math.max(0D, ability.getStatData("lifetime_extension").getValue());

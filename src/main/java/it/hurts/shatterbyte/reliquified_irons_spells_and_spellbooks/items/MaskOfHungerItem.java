@@ -179,7 +179,7 @@ public class MaskOfHungerItem extends ISASWearableRelicItem {
             var targetsDrained = 0;
             var totalDamage = 0D;
             var killedAny = false;
-            var paralysisTicks = ability.isRankModifierUnlocked("paralyzing_beam") ? Math.max(0, (int) Math.round(Math.max(0D, ability.getStatData("paralysis_duration").getValue()) * 20D)) : 0;
+            var paralysisTicks = ability.getRankModifierData("paralyzing_beam").isEnabled() ? Math.max(0, (int) Math.round(Math.max(0D, ability.getStatData("paralysis_duration").getValue()) * 20D)) : 0;
             var paralyzedTargets = 0;
 
             var targets = player.level().getEntitiesOfClass(
@@ -239,7 +239,7 @@ public class MaskOfHungerItem extends ISASWearableRelicItem {
             if (paralyzedTargets > 0 && paralysisTicks > 0)
                 ability.getStatisticData().getMetricData("paralysis_duration_total").addValue((paralysisTicks / 20D) * paralyzedTargets);
 
-            if (ability.isRankModifierUnlocked("gluttonous_surge")) {
+            if (ability.getRankModifierData("gluttonous_surge").isEnabled()) {
                 var foodToAdd = Math.max(0, (int) Math.round(Math.max(0D, ability.getStatData("food_per_target").getValue()) * targetsDrained));
                 var saturationToAdd = Math.max(0F, (float) (Math.max(0D, ability.getStatData("saturation_per_target").getValue()) * targetsDrained));
                 var foodData = player.getFoodData();
@@ -263,7 +263,7 @@ public class MaskOfHungerItem extends ISASWearableRelicItem {
             if (restoredHealth > 0D)
                 ability.getStatisticData().getMetricData("healing_restored").addValue(restoredHealth);
 
-            if (ability.isRankModifierUnlocked("predator_reset") && killedAny) {
+            if (ability.getRankModifierData("predator_reset").isEnabled() && killedAny) {
                 stack.remove(RISASDataComponents.MASK_OF_HUNGER_COOLDOWN_UNTIL.get());
             } else {
                 stack.set(RISASDataComponents.MASK_OF_HUNGER_COOLDOWN_UNTIL.get(), gameTime + Math.max(1L, Math.round(bestCooldown * 20D)));

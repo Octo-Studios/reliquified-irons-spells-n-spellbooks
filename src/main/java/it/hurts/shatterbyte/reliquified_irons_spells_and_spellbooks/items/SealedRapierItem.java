@@ -413,7 +413,7 @@ public class SealedRapierItem extends ISASWearableRelicItem {
 
             var ability = item.getRelicData(player, stack).getAbilitiesData().getAbilityData("sealed_rapier");
 
-            if (!ability.canPlayerUse(player) || "disabled".equals(ability.getMode()) || !ability.isRankModifierUnlocked("rapier_haste_aura"))
+            if (!ability.canPlayerUse(player) || "disabled".equals(ability.getMode()) || !ability.getRankModifierData("rapier_haste_aura").isEnabled())
                 continue;
 
             var radius = Math.max(0D, ability.getStatData("aura_radius").getValue());
@@ -500,7 +500,7 @@ public class SealedRapierItem extends ISASWearableRelicItem {
                 relicData.getLevelingData().addExperience("sealed_rapier", "summoned_rapier_attack", 1D);
                 ability.getStatisticData().getMetricData("rapier_damage_dealt").addValue(event.getNewDamage());
 
-                if (ability.isRankModifierUnlocked("mana_strike")) {
+                if (ability.getRankModifierData("mana_strike").isEnabled()) {
                     var manaRestore = Math.max(0D, ability.getStatData("mana_restore").getValue());
 
                     if (manaRestore > 0D) {
@@ -513,7 +513,7 @@ public class SealedRapierItem extends ISASWearableRelicItem {
                     }
                 }
 
-                if (ability.isRankModifierUnlocked("bleeding_strike") && event.getEntity() instanceof LivingEntity target) {
+                if (ability.getRankModifierData("bleeding_strike").isEnabled() && event.getEntity() instanceof LivingEntity target) {
                     var chance = Math.max(0D, Math.min(1D, ability.getStatData("bleed_chance").getValue()));
                     var bleedingLevel = Math.max(1, (int) Math.round(Math.max(0D, ability.getStatData("bleed_level").getValue())));
                     var bleedingTicks = Math.max(0, (int) Math.round(Math.max(0D, ability.getStatData("bleed_duration").getValue()) * 20D));

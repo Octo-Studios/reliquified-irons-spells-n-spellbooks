@@ -234,7 +234,7 @@ public class CardiacTrapItem extends ISASWearableRelicItem {
                 stack.remove(RISASDataComponents.cardiac_trap_PENDING_HEARTSTOP_DAMAGE.get());
             }
 
-            if (ability.isRankModifierUnlocked("paralyzing_pulse")) {
+            if (ability.getRankModifierData("paralyzing_pulse").isEnabled()) {
                 var radius = Math.max(0D, ability.getStatData("paralysis_radius").getValue());
                 var paralysisTicks = Math.max(0, (int) Math.round(Math.max(0D, ability.getStatData("paralysis_duration").getValue()) * 20D));
                 var paralyzedTargets = 0;
@@ -256,7 +256,7 @@ public class CardiacTrapItem extends ISASWearableRelicItem {
 
             var skippedCooldown = false;
 
-            if (ability.isRankModifierUnlocked("cooldown_gamble")) {
+            if (ability.getRankModifierData("cooldown_gamble").isEnabled()) {
                 var chance = Mth.clamp(ability.getStatData("cooldown_skip_chance").getValue(), 0D, 1D);
 
                 if (chance > 0D && player.getRandom().nextDouble() < chance)
@@ -291,7 +291,7 @@ public class CardiacTrapItem extends ISASWearableRelicItem {
 
                 var ability = item.getRelicData(player, stack).getAbilitiesData().getAbilityData("cardiac_trap");
 
-                if (!ability.canPlayerUse(player) || !ability.isRankModifierUnlocked("heart_overdrive"))
+                if (!ability.canPlayerUse(player) || !ability.getRankModifierData("heart_overdrive").isEnabled())
                     continue;
 
                 var boost = Math.max(0D, ability.getStatData("regen_boost").getValue());

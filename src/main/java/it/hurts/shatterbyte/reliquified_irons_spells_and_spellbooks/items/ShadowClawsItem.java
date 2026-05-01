@@ -247,7 +247,7 @@ public class ShadowClawsItem extends ExtendedSwordItem implements IRelicItem, IC
             player.fallDistance = centerFallDistance;
 
             if (stack.getOrDefault(RISASDataComponents.SHADOW_CLAWS_SHADOW_SLASH_HIT.get(), false)
-                    && ability.isRankModifierUnlocked("charge_recovery")
+                    && ability.getRankModifierData("charge_recovery").isEnabled()
                     && serverLevel.getRandom().nextDouble() < Mth.clamp(ability.getStatData("charge_refund_chance").getValue(), 0D, 1D)) {
                 stack.set(RISASDataComponents.SHADOW_CLAWS_CHARGES.get(), Math.min(maxCharges, charges + 1D));
             }
@@ -421,7 +421,7 @@ public class ShadowClawsItem extends ExtendedSwordItem implements IRelicItem, IC
 
             var weaponAbility = abilities.getAbilityData("shadow_claws");
 
-            if (!weaponAbility.canPlayerUse(player) || !weaponAbility.isRankModifierUnlocked("mana_exploit"))
+            if (!weaponAbility.canPlayerUse(player) || !weaponAbility.getRankModifierData("mana_exploit").isEnabled())
                 return;
 
             if (!(event.getEntity() instanceof Player) && !(event.getEntity() instanceof IMagicEntity))
@@ -489,7 +489,7 @@ public class ShadowClawsItem extends ExtendedSwordItem implements IRelicItem, IC
             slashAbility.getStatisticData().getMetricData("ability_hits").addValue(1D);
             slashAbility.getStatisticData().getMetricData("ability_damage_dealt").addValue(event.getNewDamage());
 
-            if (!slashAbility.isRankModifierUnlocked("bleeding_slash") || !event.getEntity().isAlive())
+            if (!slashAbility.getRankModifierData("bleeding_slash").isEnabled() || !event.getEntity().isAlive())
                 return;
 
             var bleedingLevel = Math.max(1, (int) Math.round(Math.max(0D, slashAbility.getStatData("bleeding_level").getValue())));

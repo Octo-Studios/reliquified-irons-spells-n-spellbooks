@@ -140,7 +140,7 @@ public class MirrorOfTransgressionItem extends ISASRelicItem {
             return;
         }
 
-        if (ability.isRankModifierUnlocked("homeward_focus") && targetDimension.equals(player.level().dimension())) {
+        if (ability.getRankModifierData("homeward_focus").isEnabled() && targetDimension.equals(player.level().dimension())) {
             var targetLevel = server.getLevel(targetDimension);
 
             if (targetLevel == null) {
@@ -166,13 +166,13 @@ public class MirrorOfTransgressionItem extends ISASRelicItem {
         if (level.getGameTime() - startedAt < adjustedCastTime)
             return;
 
-        if (!ability.isRankModifierUnlocked("worldline_breach") && !targetDimension.equals(player.level().dimension())) {
+        if (!ability.getRankModifierData("worldline_breach").isEnabled() && !targetDimension.equals(player.level().dimension())) {
             stack.remove(RISASDataComponents.MIRROR_OF_TRANSGRESSION_USE_STARTED_AT.get());
             player.stopUsingItem();
             return;
         }
 
-        if (targetDimension.equals(player.level().dimension()) || ability.isRankModifierUnlocked("worldline_breach")) {
+        if (targetDimension.equals(player.level().dimension()) || ability.getRankModifierData("worldline_breach").isEnabled()) {
             var targetLevel = server.getLevel(targetDimension);
 
             if (targetLevel == null) {
@@ -233,7 +233,7 @@ public class MirrorOfTransgressionItem extends ISASRelicItem {
             if (!ability.canPlayerUse(player))
                 return;
 
-            if (ability.isRankModifierUnlocked("steady_surface")) {
+            if (ability.getRankModifierData("steady_surface").isEnabled()) {
                 var reduction = Mth.clamp(ability.getStatData("channel_damage_reduction").getValue(), 0D, 1D);
 
                 if (reduction > 0D)
@@ -266,7 +266,7 @@ public class MirrorOfTransgressionItem extends ISASRelicItem {
 
             var adjustedCastTime = Math.max(1L, Math.round(Math.max(0D, ability.getStatData("cast_time").getValue()) * 20D));
 
-            if (ability.isRankModifierUnlocked("homeward_focus")) {
+            if (ability.getRankModifierData("homeward_focus").isEnabled()) {
                 var home = player.level().getSharedSpawnPos();
                 var toHome = Vec3.atCenterOf(home).subtract(player.getEyePosition());
 

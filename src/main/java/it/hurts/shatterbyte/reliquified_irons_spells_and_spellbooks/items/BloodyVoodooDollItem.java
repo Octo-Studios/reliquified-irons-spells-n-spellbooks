@@ -355,7 +355,7 @@ public class BloodyVoodooDollItem extends ISASWearableRelicItem {
                     var relicData = relic.getRelicData(owner, stack);
                     ability.getStatisticData().getMetricData("needle_damage_dealt").addValue(event.getNewDamage());
 
-                    if (ability.isRankModifierUnlocked("needle_leech")) {
+                    if (ability.getRankModifierData("needle_leech").isEnabled()) {
                         var heal = Math.max(0D, ability.getStatData("needle_heal").getValue());
 
                         heal = 1;
@@ -370,7 +370,7 @@ public class BloodyVoodooDollItem extends ISASWearableRelicItem {
                         }
                     }
 
-                    if (ability.isRankModifierUnlocked("needle_ricochet")) {
+                    if (ability.getRankModifierData("needle_ricochet").isEnabled()) {
                         var chance = Mth.clamp(ability.getStatData("ricochet_chance").getValue(), 0D, 1D);
                         var range = Math.max(0D, ability.getStatData("ricochet_range").getValue());
 
@@ -496,7 +496,7 @@ public class BloodyVoodooDollItem extends ISASWearableRelicItem {
 
                     var candidateAbility = candidateRelic.getRelicData(owner, candidateStack).getAbilitiesData().getAbilityData("voodoo_mark");
 
-                    if (!candidateAbility.canPlayerUse(owner) || !candidateAbility.isRankModifierUnlocked("death_burst"))
+                    if (!candidateAbility.canPlayerUse(owner) || !candidateAbility.getRankModifierData("death_burst").isEnabled())
                         continue;
 
                     var deathBurstNeedles = Math.max(0D, candidateAbility.getStatData("death_burst_needles").getValue());

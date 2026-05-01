@@ -172,11 +172,11 @@ public class LivingFleshItem extends ISASWearableRelicItem {
 
                 if (devourDamage > 0F) {
                     var jaw = new DevourJaw(level, owner, target);
-                    var foodPerHit = ability.isRankModifierUnlocked("gluttonous_devour") ? Math.max(0D, ability.getStatData("devour_food").getValue()) : 0D;
-                    var saturationPerHit = ability.isRankModifierUnlocked("gluttonous_devour") ? Math.max(0D, ability.getStatData("devour_saturation").getValue()) : 0D;
-                    var healPerHit = ability.isRankModifierUnlocked("vital_feast") ? Math.max(0D, ability.getStatData("devour_heal").getValue()) : 0D;
-                    var repeatChance = ability.isRankModifierUnlocked("insatiable_echo") ? Mth.clamp(ability.getStatData("repeat_chance").getValue(), 0D, 1D) : 0D;
-                    var repeatLimit = ability.isRankModifierUnlocked("insatiable_echo") ? Math.max(0, (int) Math.round(Math.max(0D, ability.getStatData("repeat_limit").getValue()))) : 0;
+                    var foodPerHit = ability.getRankModifierData("gluttonous_devour").isEnabled() ? Math.max(0D, ability.getStatData("devour_food").getValue()) : 0D;
+                    var saturationPerHit = ability.getRankModifierData("gluttonous_devour").isEnabled() ? Math.max(0D, ability.getStatData("devour_saturation").getValue()) : 0D;
+                    var healPerHit = ability.getRankModifierData("vital_feast").isEnabled() ? Math.max(0D, ability.getStatData("devour_heal").getValue()) : 0D;
+                    var repeatChance = ability.getRankModifierData("insatiable_echo").isEnabled() ? Mth.clamp(ability.getStatData("repeat_chance").getValue(), 0D, 1D) : 0D;
+                    var repeatLimit = ability.getRankModifierData("insatiable_echo").isEnabled() ? Math.max(0, (int) Math.round(Math.max(0D, ability.getStatData("repeat_limit").getValue()))) : 0;
 
                     jaw.setPos(target.position());
                     jaw.setYRot(owner.getYRot());
@@ -325,10 +325,10 @@ public class LivingFleshItem extends ISASWearableRelicItem {
                     ability.getStatisticData().getMetricData("devour_damage_dealt").addValue(event.getNewDamage());
                     relicData.getLevelingData().addExperience("living_flesh", "ability_trigger", 1D);
 
-                    if (ability.isRankModifierUnlocked("gluttonous_devour") && restoredFood > 0)
+                    if (ability.getRankModifierData("gluttonous_devour").isEnabled() && restoredFood > 0)
                         ability.getStatisticData().getMetricData("devour_food_restored").addValue(restoredFood);
 
-                    if (ability.isRankModifierUnlocked("vital_feast") && restoredHealth > 0F)
+                    if (ability.getRankModifierData("vital_feast").isEnabled() && restoredHealth > 0F)
                         ability.getStatisticData().getMetricData("devour_healing_restored").addValue(restoredHealth);
                 }
 

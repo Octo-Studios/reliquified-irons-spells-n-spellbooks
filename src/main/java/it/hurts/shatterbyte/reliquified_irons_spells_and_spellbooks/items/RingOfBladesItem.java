@@ -138,7 +138,7 @@ public class RingOfBladesItem extends ISASWearableRelicItem {
 
             relic.ability().getStatisticData().getMetricData("slash_damage_dealt").addValue(event.getNewDamage());
 
-            if (relic.ability().isRankModifierUnlocked("blade_leech")) {
+            if (relic.ability().getRankModifierData("blade_leech").isEnabled()) {
                 var heal = Math.max(0D, relic.ability().getStatData("blade_heal").getValue());
 
                 if (heal > 0D) {
@@ -148,7 +148,7 @@ public class RingOfBladesItem extends ISASWearableRelicItem {
                 }
             }
 
-            if (relic.ability().isRankModifierUnlocked("blade_rampage")) {
+            if (relic.ability().getRankModifierData("blade_rampage").isEnabled()) {
                 var bonus = Math.max(0D, relic.ability().getStatData("ramping_damage_bonus").getValue());
 
                 if (bonus > 0D) {
@@ -233,7 +233,7 @@ public class RingOfBladesItem extends ISASWearableRelicItem {
             var slashes = 1;
             var relicData = relic.item().getRelicData(player, relic.stack());
 
-            if (relic.ability().isRankModifierUnlocked("multicast_arc")) {
+            if (relic.ability().getRankModifierData("multicast_arc").isEnabled()) {
                 var maxSlashes = Math.max(1, (int) Math.round(Math.max(0D, relic.ability().getStatData("max_multicast_slashes").getValue())));
                 var chance = Mth.clamp(relic.ability().getStatData("multicast_chance").getValue(), 0D, 1D);
 

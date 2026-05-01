@@ -139,7 +139,7 @@ public class PulsarMantleItem extends ISASWearableRelicItem {
             ability.getStatisticData().getMetricData("ability_triggers").addValue(1D);
         }
 
-        if (pendingMissiles > 0 && ability.isRankModifierUnlocked("gravitational_pulse")) {
+        if (pendingMissiles > 0 && ability.getRankModifierData("gravitational_pulse").isEnabled()) {
             var level = player.serverLevel();
             var pulseRadius = Math.max(0D, ability.getStatData("pulse_radius").getValue());
             var pulsePush = Math.max(0D, ability.getStatData("pulse_push").getValue());
@@ -261,7 +261,7 @@ public class PulsarMantleItem extends ISASWearableRelicItem {
 
             var ability = bestItem.getRelicData(player, selectedStack).getAbilitiesData().getAbilityData("pulsar_mantle");
 
-            if (ability.isRankModifierUnlocked("restorative_missile")) {
+            if (ability.getRankModifierData("restorative_missile").isEnabled()) {
                 var heal = Math.max(0D, ability.getStatData("heal_on_hit").getValue());
 
                 if (heal > 0D) {
@@ -271,7 +271,7 @@ public class PulsarMantleItem extends ISASWearableRelicItem {
                 }
             }
 
-            if (!ability.isRankModifierUnlocked("missile_buffer"))
+            if (!ability.getRankModifierData("missile_buffer").isEnabled())
                 return;
 
             var gameTime = player.level().getGameTime();

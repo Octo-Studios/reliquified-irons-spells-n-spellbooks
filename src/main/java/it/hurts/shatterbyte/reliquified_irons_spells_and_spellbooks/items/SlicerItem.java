@@ -324,7 +324,7 @@ public class SlicerItem extends ExtendedSwordItem implements IRelicItem, ICreati
             stack.remove(RISASDataComponents.SLICER_BLADE_WINDOW_UNTIL.get());
             stack.remove(RISASDataComponents.SLICER_BLADE_DECAY_AT.get());
         } else if (windowUntil <= gameTime) {
-            if (bladeAbility.canPlayerUse(player) && bladeAbility.isRankModifierUnlocked("slow_charge_decay")) {
+            if (bladeAbility.canPlayerUse(player) && bladeAbility.getRankModifierData("slow_charge_decay").isEnabled()) {
                 var nextDecayAt = stack.getOrDefault(RISASDataComponents.SLICER_BLADE_DECAY_AT.get(), 0L);
 
                 if (nextDecayAt <= 0L)
@@ -541,7 +541,7 @@ public class SlicerItem extends ExtendedSwordItem implements IRelicItem, ICreati
         }
 
         attacked.add(target.getUUID());
-        if (slicerAbility.isRankModifierUnlocked("unstable_mark")
+        if (slicerAbility.getRankModifierData("unstable_mark").isEnabled()
                 && serverLevel.getRandom().nextDouble() < Mth.clamp(slicerAbility.getStatData("mark_ignore_chance").getValue(), 0D, 1D)) {
             attacked.remove(attacked.size() - 1);
         }
@@ -674,7 +674,7 @@ public class SlicerItem extends ExtendedSwordItem implements IRelicItem, ICreati
             var windowTicks = Math.max(1L, Math.round(Math.max(0D, ability.getStatData("combo_window").getValue()) * 20D));
 
             if (windowUntil <= gameTime) {
-                if (ability.isRankModifierUnlocked("slow_charge_decay")) {
+                if (ability.getRankModifierData("slow_charge_decay").isEnabled()) {
                     var nextDecayAt = stack.getOrDefault(RISASDataComponents.SLICER_BLADE_DECAY_AT.get(), 0L);
 
                     if (nextDecayAt <= 0L)
@@ -801,7 +801,7 @@ public class SlicerItem extends ExtendedSwordItem implements IRelicItem, ICreati
 
                     relicData.getLevelingData().addExperience("slicer", "ability_kill", 1D);
 
-                    if (!ability.isRankModifierUnlocked("blood_cycle"))
+                    if (!ability.getRankModifierData("blood_cycle").isEnabled())
                         continue;
 
                     var intervalTicks = Math.max(1,

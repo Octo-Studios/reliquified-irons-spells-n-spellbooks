@@ -181,7 +181,7 @@ public class FlaskOfTheRedMistItem extends ISASWearableRelicItem {
             SpellRegistry.BLOOD_STEP_SPELL.get().onCast(level, 1, player, CastSource.SWORD, magicData);
             magicData.resetAdditionalCastData();
 
-            if (ability.isRankModifierUnlocked("smokescreen")) {
+            if (ability.getRankModifierData("smokescreen").isEnabled()) {
                 var blindnessTicks = Math.max(0, (int) Math.round(Math.max(0D, ability.getStatData("blindness_duration").getValue()) * 20D));
 
                 if (blindnessTicks > 0 && attacker.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, blindnessTicks, 0, false, true, true))) {
@@ -190,7 +190,7 @@ public class FlaskOfTheRedMistItem extends ISASWearableRelicItem {
                 }
             }
 
-            if (ability.isRankModifierUnlocked("hunt_mark")) {
+            if (ability.getRankModifierData("hunt_mark").isEnabled()) {
                 var radius = Math.max(0D, ability.getStatData("taunt_radius").getValue());
                 var taunted = 0;
 
@@ -202,7 +202,7 @@ public class FlaskOfTheRedMistItem extends ISASWearableRelicItem {
                 }
             }
 
-            if (ability.isRankModifierUnlocked("execution_window")) {
+            if (ability.getRankModifierData("execution_window").isEnabled()) {
                 var windowTicks = Math.max(0L, Math.round(Math.max(0D, ability.getStatData("next_attack_window").getValue()) * 20D));
 
                 if (windowTicks > 0L) {
@@ -241,7 +241,7 @@ public class FlaskOfTheRedMistItem extends ISASWearableRelicItem {
 
                 var candidateAbility = candidateItem.getRelicData(player, candidateStack).getAbilitiesData().getAbilityData("red_mist");
 
-                if (!candidateAbility.canPlayerUse(player) || !candidateAbility.isRankModifierUnlocked("execution_window"))
+                if (!candidateAbility.canPlayerUse(player) || !candidateAbility.getRankModifierData("execution_window").isEnabled())
                     continue;
 
                 var bonus = Math.max(0D, candidateAbility.getStatData("next_attack_bonus").getValue());

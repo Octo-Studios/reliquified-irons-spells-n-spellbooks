@@ -149,7 +149,7 @@ public class LunarSextantItem extends ISASWearableRelicItem {
                 ability.getStatisticData().getMetricData("star_hits").addValue(1D);
                 ability.getStatisticData().getMetricData("star_damage_dealt").addValue(event.getNewDamage());
 
-                if (ability.isRankModifierUnlocked("stunning_impact") && target instanceof LivingEntity living && living.isAlive()) {
+                if (ability.getRankModifierData("stunning_impact").isEnabled() && target instanceof LivingEntity living && living.isAlive()) {
                     var stunTicks = Math.max(0, (int) Math.round(Math.max(0D, ability.getStatData("stun_duration").getValue()) * 20D));
 
                     if (stunTicks > 0) {
@@ -158,7 +158,7 @@ public class LunarSextantItem extends ISASWearableRelicItem {
                     }
                 }
 
-                if (!ability.isRankModifierUnlocked("chain_starfall"))
+                if (!ability.getRankModifierData("chain_starfall").isEnabled())
                     return;
 
                 var chance = Mth.clamp(ability.getStatData("chain_chance").getValue(), 0D, 1D);
@@ -179,7 +179,7 @@ public class LunarSextantItem extends ISASWearableRelicItem {
                 var nextTarget = candidates.get(level.getRandom().nextInt(candidates.size()));
                 var damage = Math.max(0D, ability.getStatData("star_damage").getValue());
 
-                if (ability.isRankModifierUnlocked("zenith_blessing")) {
+                if (ability.getRankModifierData("zenith_blessing").isEnabled()) {
                     var peakMultiplier = Mth.clamp(ability.getStatData("zenith_bonus").getValue(), 0D, 10D);
                     var timeOfDay = level.getDayTime() % 24000L;
 
@@ -244,7 +244,7 @@ public class LunarSextantItem extends ISASWearableRelicItem {
 
                 var damage = Math.max(0D, candidateAbility.getStatData("star_damage").getValue());
 
-                if (candidateAbility.isRankModifierUnlocked("zenith_blessing")) {
+                if (candidateAbility.getRankModifierData("zenith_blessing").isEnabled()) {
                     var peakMultiplier = Mth.clamp(candidateAbility.getStatData("zenith_bonus").getValue(), 0D, 10D);
                     var timeOfDay = level.getDayTime() % 24000L;
 

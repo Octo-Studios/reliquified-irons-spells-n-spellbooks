@@ -427,7 +427,7 @@ public class SealedClaymoreItem extends ISASWearableRelicItem {
 
             var equippedAbility = equippedItem.getRelicData(player, equippedStack).getAbilitiesData().getAbilityData("sealed_claymore");
 
-            if (!equippedAbility.canPlayerUse(player) || "disabled".equals(equippedAbility.getMode()) || !equippedAbility.isRankModifierUnlocked("absorption_strike"))
+            if (!equippedAbility.canPlayerUse(player) || "disabled".equals(equippedAbility.getMode()) || !equippedAbility.getRankModifierData("absorption_strike").isEnabled())
                 continue;
 
             if (Math.max(0D, equippedAbility.getStatData("absorption_cap").getValue()) > 0D) {
@@ -455,7 +455,7 @@ public class SealedClaymoreItem extends ISASWearableRelicItem {
 
             var ability = item.getRelicData(player, stack).getAbilitiesData().getAbilityData("sealed_claymore");
 
-            if (!ability.canPlayerUse(player) || "disabled".equals(ability.getMode()) || !ability.isRankModifierUnlocked("absorption_strike"))
+            if (!ability.canPlayerUse(player) || "disabled".equals(ability.getMode()) || !ability.getRankModifierData("absorption_strike").isEnabled())
                 continue;
 
             cap = Math.max(cap, Math.max(0D, ability.getStatData("absorption_cap").getValue()));
@@ -507,7 +507,7 @@ public class SealedClaymoreItem extends ISASWearableRelicItem {
                 relicData.getLevelingData().addExperience("sealed_claymore", "summoned_claymore_attack", 1D);
                 ability.getStatisticData().getMetricData("claymore_damage_dealt").addValue(event.getNewDamage());
 
-                if (ability.isRankModifierUnlocked("absorption_strike")) {
+                if (ability.getRankModifierData("absorption_strike").isEnabled()) {
                     var gain = Math.max(0D, ability.getStatData("absorption_gain").getValue());
                     var cap = Math.max(0D, ability.getStatData("absorption_cap").getValue());
 
@@ -521,7 +521,7 @@ public class SealedClaymoreItem extends ISASWearableRelicItem {
                     }
                 }
 
-                if (ability.isRankModifierUnlocked("stunning_strike") && event.getEntity() instanceof LivingEntity target) {
+                if (ability.getRankModifierData("stunning_strike").isEnabled() && event.getEntity() instanceof LivingEntity target) {
                     var chance = Math.max(0D, Math.min(1D, ability.getStatData("stun_chance").getValue()));
                     var stunTicks = Math.max(0, (int) Math.round(Math.max(0D, ability.getStatData("stun_duration").getValue()) * 20D));
 
@@ -568,7 +568,7 @@ public class SealedClaymoreItem extends ISASWearableRelicItem {
 
                 var ability = item.getRelicData(player, stack).getAbilitiesData().getAbilityData("sealed_claymore");
 
-                if (!ability.canPlayerUse(player) || "disabled".equals(ability.getMode()) || !ability.isRankModifierUnlocked("claymore_guard_aura"))
+                if (!ability.canPlayerUse(player) || "disabled".equals(ability.getMode()) || !ability.getRankModifierData("claymore_guard_aura").isEnabled())
                     continue;
 
                 var radius = Math.max(0D, ability.getStatData("aura_radius").getValue());

@@ -109,7 +109,7 @@ public class ImmaterialDisperserItem extends ISASWearableRelicItem {
 
         var ability = this.getRelicData(player, stack).getAbilitiesData().getAbilityData("immaterial_disperser");
 
-        if (ability.canPlayerUse(player) && ability.isRankModifierUnlocked("summon_dispel")) {
+        if (ability.canPlayerUse(player) && ability.getRankModifierData("summon_dispel").isEnabled()) {
             var magicData = MagicData.getPlayerMagicData(player);
             var summonsDispelled = 0;
 
@@ -255,7 +255,7 @@ public class ImmaterialDisperserItem extends ISASWearableRelicItem {
             relicData.getLevelingData().addExperience("immaterial_disperser", "spell_dispelled", 1D);
             ability.getStatisticData().getMetricData("spells_dispelled").addValue(1D);
 
-            if (ability.isRankModifierUnlocked("mana_refund")) {
+            if (ability.getRankModifierData("mana_refund").isEnabled()) {
                 var manaRestore = Math.max(0D, ability.getStatData("mana_restore").getValue());
 
                 if (manaRestore > 0D) {
@@ -266,7 +266,7 @@ public class ImmaterialDisperserItem extends ISASWearableRelicItem {
                 }
             }
 
-            if (!ability.isRankModifierUnlocked("retaliation_mark") || source == null)
+            if (!ability.getRankModifierData("retaliation_mark").isEnabled() || source == null)
                 return;
 
             var durationTicks = Math.max(0L, Math.round(Math.max(0D, ability.getStatData("retaliation_duration").getValue()) * 20D));
@@ -314,7 +314,7 @@ public class ImmaterialDisperserItem extends ISASWearableRelicItem {
 
                 var ability = item.getRelicData(player, stack).getAbilitiesData().getAbilityData("immaterial_disperser");
 
-                if (!ability.canPlayerUse(player) || !ability.isRankModifierUnlocked("summon_dispel"))
+                if (!ability.canPlayerUse(player) || !ability.getRankModifierData("summon_dispel").isEnabled())
                     continue;
 
                 var magicData = MagicData.getPlayerMagicData(player);
@@ -352,7 +352,7 @@ public class ImmaterialDisperserItem extends ISASWearableRelicItem {
 
                 var ability = item.getRelicData(player, stack).getAbilitiesData().getAbilityData("immaterial_disperser");
 
-                if (!ability.canPlayerUse(player) || !ability.isRankModifierUnlocked("retaliation_mark"))
+                if (!ability.canPlayerUse(player) || !ability.getRankModifierData("retaliation_mark").isEnabled())
                     continue;
 
                 var entries = new ArrayList<>(stack.getOrDefault(RISASDataComponents.IMMATERIAL_DISPERSER_RETALIATION.get(), List.of()));

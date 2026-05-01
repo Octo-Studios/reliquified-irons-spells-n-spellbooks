@@ -161,7 +161,7 @@ public class SinnerCrownItem extends ISASWearableRelicItem {
                 continue;
             }
 
-            var exploded = ability.canPlayerUse(player) && ability.isRankModifierUnlocked("sacrificial_end");
+            var exploded = ability.canPlayerUse(player) && ability.getRankModifierData("sacrificial_end").isEnabled();
 
             if (exploded)
                 CommonEvents.explodeSummon(level, summon, player, summonData.explosionDamage());
@@ -264,7 +264,7 @@ public class SinnerCrownItem extends ISASWearableRelicItem {
                             if (ownedByThisCrown)
                                 relicData.getLevelingData().addExperience("sinner_crown", "summon_kill", 1D);
 
-                            if (!ownedByThisCrown || !ability.isRankModifierUnlocked("summon_lineage")) {
+                            if (!ownedByThisCrown || !ability.getRankModifierData("summon_lineage").isEnabled()) {
                                 if (cleaned.size() != summons.size())
                                     setSummons(stack, cleaned);
 
@@ -336,7 +336,7 @@ public class SinnerCrownItem extends ISASWearableRelicItem {
                             continue;
                         }
 
-                        if (ability.canPlayerUse(player) && ability.isRankModifierUnlocked("sacrificial_end")) {
+                        if (ability.canPlayerUse(player) && ability.getRankModifierData("sacrificial_end").isEnabled()) {
                             explodeSummon(level, deadEntity, player, summonData.explosionDamage());
                         }
 
@@ -414,7 +414,7 @@ public class SinnerCrownItem extends ISASWearableRelicItem {
 
                 var ability = crown.getRelicData(player, stack).getAbilitiesData().getAbilityData("sinner_crown");
 
-                if (!ability.canPlayerUse(player) || !ability.isRankModifierUnlocked("shared_pain"))
+                if (!ability.canPlayerUse(player) || !ability.getRankModifierData("shared_pain").isEnabled())
                     continue;
 
                 var radius = Math.max(0D, ability.getStatData("shared_pain_radius").getValue());

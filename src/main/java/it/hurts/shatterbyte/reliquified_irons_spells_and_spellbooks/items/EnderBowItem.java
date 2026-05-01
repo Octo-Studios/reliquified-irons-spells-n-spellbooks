@@ -170,7 +170,7 @@ public class EnderBowItem extends ISASRelicItem {
 
         offsets.add(0D);
 
-        if (ability.isRankModifierUnlocked("multishot_arc")) {
+        if (ability.getRankModifierData("multishot_arc").isEnabled()) {
             var chance = Mth.clamp(ability.getStatData("multicast_chance").getValue(), 0D, 1D);
             var maxExtraArrows = Math.max(1, (int) Math.round(Math.max(0D, ability.getStatData("max_extra_arrows").getValue())));
             var extraArrows = MathUtils.multicast(serverLevel.getRandom(), chance, maxExtraArrows);
@@ -344,7 +344,7 @@ public class EnderBowItem extends ISASRelicItem {
             if (stack.isEmpty() || ability == null || item == null)
                 return;
 
-            if (!ability.isRankModifierUnlocked("escalating_wounds"))
+            if (!ability.getRankModifierData("escalating_wounds").isEnabled())
                 return;
 
             var marks = new ArrayList<>(stack.getOrDefault(RISASDataComponents.ENDER_BOW_MARKS.get(), List.of()));
@@ -479,7 +479,7 @@ public class EnderBowItem extends ISASRelicItem {
             item.getRelicData(player, stack).getLevelingData().addExperience("ender_bow", "arrow_hit", 1D);
             ability.getStatisticData().getMetricData("arrow_hits").addValue(1D);
 
-            if (ability.isRankModifierUnlocked("stunning_bolt") && event.getEntity() instanceof LivingEntity target && target.isAlive()) {
+            if (ability.getRankModifierData("stunning_bolt").isEnabled() && event.getEntity() instanceof LivingEntity target && target.isAlive()) {
                 var stunTicks = Math.max(0, (int) Math.round(Math.max(0D, ability.getStatData("stun_duration").getValue()) * 20D));
 
                 if (stunTicks > 0) {
@@ -488,7 +488,7 @@ public class EnderBowItem extends ISASRelicItem {
                 }
             }
 
-            if (!ability.isRankModifierUnlocked("escalating_wounds"))
+            if (!ability.getRankModifierData("escalating_wounds").isEnabled())
                 return;
 
             var marks = new ArrayList<>(stack.getOrDefault(RISASDataComponents.ENDER_BOW_MARKS.get(), List.of()));

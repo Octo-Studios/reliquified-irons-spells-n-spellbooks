@@ -104,7 +104,7 @@ public class DragonBloodVialItem extends ISASWearableRelicItem {
 
         var ability = this.getRelicData(player, stack).getAbilitiesData().getAbilityData("dragon_blood");
 
-        if (!ability.canPlayerUse(player) || !ability.isRankModifierUnlocked("dragon_regeneration"))
+        if (!ability.canPlayerUse(player) || !ability.getRankModifierData("dragon_regeneration").isEnabled())
             return;
 
         var regenerationPerSecond = Math.max(0D, ability.getStatData("regeneration_per_second").getValue());
@@ -168,7 +168,7 @@ public class DragonBloodVialItem extends ISASWearableRelicItem {
 
                 LivingEntity target = null;
 
-                if (ability.isRankModifierUnlocked("magnetic_drop")) {
+                if (ability.getRankModifierData("magnetic_drop").isEnabled()) {
                     if (event.getSource().getEntity() instanceof LivingEntity sourceLiving && sourceLiving.isAlive()) {
                         target = sourceLiving;
                     } else if (event.getSource().getDirectEntity() instanceof LivingEntity directLiving && directLiving.isAlive()) {
@@ -225,9 +225,9 @@ public class DragonBloodVialItem extends ISASWearableRelicItem {
                 droplet.configure(
                         Math.max(0D, ability.getStatData("pool_radius").getValue()),
                         Math.max(0D, ability.getStatData("pool_damage").getValue()),
-                        ability.isRankModifierUnlocked("split_burst") ? Mth.clamp(ability.getStatData("split_chance").getValue(), 0D, 1D) : 0D,
-                        ability.isRankModifierUnlocked("split_burst") ? Math.max(1, (int) Math.round(Math.max(0D, ability.getStatData("split_limit").getValue()))) : 0,
-                        ability.isRankModifierUnlocked("split_burst") ? Mth.clamp(ability.getStatData("split_power").getValue(), 0D, 1D) : 0D,
+                        ability.getRankModifierData("split_burst").isEnabled() ? Mth.clamp(ability.getStatData("split_chance").getValue(), 0D, 1D) : 0D,
+                        ability.getRankModifierData("split_burst").isEnabled() ? Math.max(1, (int) Math.round(Math.max(0D, ability.getStatData("split_limit").getValue()))) : 0,
+                        ability.getRankModifierData("split_burst").isEnabled() ? Mth.clamp(ability.getStatData("split_power").getValue(), 0D, 1D) : 0D,
                         1D,
                         true
                 );
