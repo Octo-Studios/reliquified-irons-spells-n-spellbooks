@@ -135,7 +135,7 @@ public class EnderBowItem extends ISASRelicItem {
             return InteractionResultHolder.fail(stack);
 
         if (!level.isClientSide())
-            level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundRegistry.MAGIC_ARROW_CHARGE.get(), player.getSoundSource(), 1F, 1F);
+            level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundRegistry.MAGIC_ARROW_CHARGE.get(), player.getSoundSource(), 1F, 0.85F);
 
         player.startUsingItem(hand);
         return InteractionResultHolder.sidedSuccess(stack, level.isClientSide());
