@@ -122,7 +122,7 @@ dependencies {
     implementation "dev.architectury:architectury-neoforge:13.0.6"
 
     implementation "curse.maven:geckolib-388172:7707149"
-    implementation "curse.maven:irons-spells-n-spellbooks-855414:7907341"
+    implementation "curse.maven:irons-spells-n-spellbooks-855414:8202148"
     implementation "curse.maven:irons-lib-1492763:7907336"
     implementation "curse.maven:playeranimator-658587:7389814"
 
