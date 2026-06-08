@@ -17,6 +17,7 @@ import it.hurts.sskirillss.relics.api.relics.abilities.ExperienceSourcesTemplate
 import it.hurts.sskirillss.relics.api.relics.abilities.stats.AbilityStatTemplate;
 import it.hurts.sskirillss.relics.init.RelicsScalingModels;
 import it.hurts.sskirillss.relics.items.relics.base.data.loot.LootTemplate;
+import it.hurts.sskirillss.relics.items.relics.base.data.research.ResearchTemplate;
 import it.hurts.sskirillss.relics.utils.EntityUtils;
 import it.hurts.sskirillss.relics.utils.MathUtils;
 import net.minecraft.server.level.ServerPlayer;
@@ -35,7 +36,7 @@ public class DragonBloodVialItem extends ISASWearableRelicItem {
     public RelicTemplate constructDefaultRelicTemplate() {
         return RelicTemplate.builder()
                 .abilities(AbilitiesTemplate.builder()
-                                .ability(AbilityTemplate.builder("dragon_blood")
+                        .ability(AbilityTemplate.builder("dragon_blood")
                                 .rankModifier(1, "dragon_regeneration")
                                 .rankModifier(3, "magnetic_drop")
                                 .rankModifier(5, "split_burst")
@@ -88,6 +89,10 @@ public class DragonBloodVialItem extends ISASWearableRelicItem {
                                                 .formatValue(value -> String.valueOf(MathUtils.round(value, 2)))
                                                 .rankModifierVisibilityState("dragon_regeneration", VisibilityState.OBFUSCATED)
                                                 .build())
+                                        .build())
+                                .research(ResearchTemplate.builder()
+                                        .star(0, 11, 4).star(1, 5, 22).star(2, 16, 22).star(3, 10, 27)
+                                        .link(1, 0).link(0, 2).link(3, 2).link(3, 1)
                                         .build())
                                 .build())
                         .build())

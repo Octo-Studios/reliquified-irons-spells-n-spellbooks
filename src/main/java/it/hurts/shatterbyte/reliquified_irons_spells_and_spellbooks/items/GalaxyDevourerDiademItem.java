@@ -20,6 +20,7 @@ import it.hurts.sskirillss.relics.api.relics.abilities.stats.AbilityStatTemplate
 import it.hurts.sskirillss.relics.api.relics.data.AbilityData;
 import it.hurts.sskirillss.relics.init.RelicsScalingModels;
 import it.hurts.sskirillss.relics.items.relics.base.data.loot.LootTemplate;
+import it.hurts.sskirillss.relics.items.relics.base.data.research.ResearchTemplate;
 import it.hurts.sskirillss.relics.utils.EntityUtils;
 import it.hurts.sskirillss.relics.utils.MathUtils;
 import net.minecraft.server.level.ServerLevel;
@@ -104,6 +105,10 @@ public class GalaxyDevourerDiademItem extends ISASWearableRelicItem {
                                                 .formatValue(value -> String.valueOf(Math.max(0, (int) MathUtils.round(value, 0))))
                                                 .rankModifierVisibilityState("singularity_fusion", VisibilityState.OBFUSCATED)
                                                 .build())
+                                        .build())
+                                .research(ResearchTemplate.builder()
+                                        .star(0, 7, 9).star(1, 6, 21).star(2, 16, 19).star(3, 2, 25).star(4, 21, 6).star(5, 19, 9)
+                                        .link(5, 1).link(1, 0).link(0, 5).link(5, 2).link(2, 1).link(1, 3).link(5, 4)
                                         .build())
                                 .build())
                         .build())

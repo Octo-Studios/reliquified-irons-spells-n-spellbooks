@@ -28,6 +28,7 @@ import it.hurts.sskirillss.relics.api.relics.abilities.stats.AbilityStatTemplate
 import it.hurts.sskirillss.relics.api.relics.data.AbilityData;
 import it.hurts.sskirillss.relics.init.RelicsScalingModels;
 import it.hurts.sskirillss.relics.items.relics.base.data.loot.LootTemplate;
+import it.hurts.sskirillss.relics.items.relics.base.data.research.ResearchTemplate;
 import it.hurts.sskirillss.relics.utils.MathUtils;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
@@ -93,6 +94,10 @@ public class ImmaterialDisperserItem extends ISASWearableRelicItem {
                                                 .formatValue(value -> String.valueOf(MathUtils.round(value, 2)))
                                                 .rankModifierVisibilityState("retaliation_mark", VisibilityState.OBFUSCATED)
                                                 .build())
+                                        .build())
+                                .research(ResearchTemplate.builder()
+                                        .star(0, 9, 21).star(1, 13, 21).star(2, 11, 12).star(3, 6, 15).star(4, 16, 15).star(5, 11, 9).star(6, 11, 16).star(7, 1, 15).star(8, 20, 15).star(9, 11, 27).star(10, 11, 2)
+                                        .link(3, 2).link(2, 5).link(2, 4).link(6, 2).link(6, 0).link(6, 1).link(10, 8).link(8, 9).link(9, 7).link(7, 10)
                                         .build())
                                 .build())
                         .build())

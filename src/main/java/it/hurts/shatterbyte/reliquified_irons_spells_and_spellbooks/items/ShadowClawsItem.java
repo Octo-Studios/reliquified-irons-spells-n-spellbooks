@@ -28,6 +28,7 @@ import it.hurts.sskirillss.relics.init.RelicsScalingModels;
 import it.hurts.sskirillss.relics.items.misc.CreativeContentConstructor;
 import it.hurts.sskirillss.relics.items.misc.ICreativeTabContent;
 import it.hurts.sskirillss.relics.items.relics.base.data.loot.LootTemplate;
+import it.hurts.sskirillss.relics.items.relics.base.data.research.ResearchTemplate;
 import it.hurts.sskirillss.relics.utils.MathUtils;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
@@ -96,6 +97,10 @@ public class ShadowClawsItem extends ExtendedSwordItem implements IRelicItem, IC
                                                 .formatValue(value -> String.valueOf(MathUtils.round(value, 2)))
                                                 .build())
                                         .build())
+                                .research(ResearchTemplate.builder()
+                                        .star(0, 15, 3).star(1, 2, 13).star(2, 16, 8).star(3, 16, 21).star(4, 10, 26).star(5, 3, 20).star(6, 17, 14).star(7, 6, 24)
+                                        .link(0, 1).link(5, 2).link(7, 6).link(4, 3)
+                                        .build())
                                 .build())
                         .ability(AbilityTemplate.builder("shadow_slash")
                                 .rankModifier(3, "bleeding_slash")
@@ -148,6 +153,10 @@ public class ShadowClawsItem extends ExtendedSwordItem implements IRelicItem, IC
                                                 .formatValue(value -> MathUtils.formatTime(Math.max(0, (int) MathUtils.round(value, 0))))
                                                 .rankModifierVisibilityState("bleeding_slash", VisibilityState.OBFUSCATED)
                                                 .build())
+                                        .build())
+                                .research(ResearchTemplate.builder()
+                                        .star(0, 18, 5).star(1, 9, 9).star(2, 4, 15).star(3, 10, 22).star(4, 19, 21)
+                                        .link(0, 1).link(1, 2).link(2, 3).link(3, 4)
                                         .build())
                                 .build())
                         .build())

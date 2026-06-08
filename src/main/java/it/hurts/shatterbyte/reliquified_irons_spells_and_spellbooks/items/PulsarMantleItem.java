@@ -18,6 +18,7 @@ import it.hurts.sskirillss.relics.api.relics.abilities.ExperienceSourcesTemplate
 import it.hurts.sskirillss.relics.api.relics.abilities.stats.AbilityStatTemplate;
 import it.hurts.sskirillss.relics.init.RelicsScalingModels;
 import it.hurts.sskirillss.relics.items.relics.base.data.loot.LootTemplate;
+import it.hurts.sskirillss.relics.items.relics.base.data.research.ResearchTemplate;
 import it.hurts.sskirillss.relics.utils.EntityUtils;
 import it.hurts.sskirillss.relics.utils.MathUtils;
 import net.minecraft.server.level.ServerPlayer;
@@ -90,6 +91,10 @@ public class PulsarMantleItem extends ISASWearableRelicItem {
                                                 .formatValue(value -> String.valueOf(MathUtils.round(value, 2)))
                                                 .rankModifierVisibilityState("restorative_missile", VisibilityState.OBFUSCATED)
                                                 .build())
+                                        .build())
+                                .research(ResearchTemplate.builder()
+                                        .star(0, 1, 26).star(1, 20, 3).star(2, 7, 10).star(3, 5, 15).star(4, 12, 8).star(5, 10, 20).star(6, 15, 18).star(7, 16, 13).star(8, 9, 13).star(9, 12, 16).star(10, 8, 18).star(11, 14, 11)
+                                        .link(3, 2).link(2, 4).link(5, 6).link(6, 7).link(0, 10).link(10, 8).link(8, 11).link(11, 1).link(10, 9).link(9, 11)
                                         .build())
                                 .build())
                         .build())

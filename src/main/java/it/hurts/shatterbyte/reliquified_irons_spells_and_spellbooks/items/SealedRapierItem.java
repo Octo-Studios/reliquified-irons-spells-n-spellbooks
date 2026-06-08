@@ -23,6 +23,7 @@ import it.hurts.sskirillss.relics.api.relics.abilities.stats.AbilityStatTemplate
 import it.hurts.sskirillss.relics.init.RelicsMobEffects;
 import it.hurts.sskirillss.relics.init.RelicsScalingModels;
 import it.hurts.sskirillss.relics.items.relics.base.data.loot.LootTemplate;
+import it.hurts.sskirillss.relics.items.relics.base.data.research.ResearchTemplate;
 import it.hurts.sskirillss.relics.utils.EntityUtils;
 import it.hurts.sskirillss.relics.utils.MathUtils;
 import net.minecraft.resources.ResourceLocation;
@@ -141,6 +142,10 @@ public class SealedRapierItem extends ISASWearableRelicItem {
                                                 .formatValue(value -> MathUtils.formatTime(Math.max(0, (int) MathUtils.round(value, 0))))
                                                 .rankModifierVisibilityState("bleeding_strike", VisibilityState.OBFUSCATED)
                                                 .build())
+                                        .build())
+                                .research(ResearchTemplate.builder()
+                                        .star(0, 10, 26).star(1, 10, 20).star(2, 10, 4).star(3, 6, 20).star(4, 14, 20)
+                                        .link(0, 1).link(1, 3).link(1, 4).link(1, 2)
                                         .build())
                                 .build())
                         .build())

@@ -19,6 +19,7 @@ import it.hurts.sskirillss.relics.api.relics.data.AbilityData;
 import it.hurts.sskirillss.relics.init.RelicsMobEffects;
 import it.hurts.sskirillss.relics.init.RelicsScalingModels;
 import it.hurts.sskirillss.relics.items.relics.base.data.loot.LootTemplate;
+import it.hurts.sskirillss.relics.items.relics.base.data.research.ResearchTemplate;
 import it.hurts.sskirillss.relics.utils.EntityUtils;
 import it.hurts.sskirillss.relics.utils.MathUtils;
 import net.minecraft.server.level.ServerLevel;
@@ -88,6 +89,10 @@ public class EchoGloveItem extends ISASWearableRelicItem {
                                                 .formatValue(value -> MathUtils.formatTime(Math.max(0, (int) MathUtils.round(value, 0))))
                                                 .rankModifierVisibilityState("stunning_echo", VisibilityState.OBFUSCATED)
                                                 .build())
+                                        .build())
+                                .research(ResearchTemplate.builder()
+                                        .star(0, 11, 17).star(1, 4, 6).star(2, 10, 4).star(3, 16, 5).star(4, 19, 11).star(5, 20, 19).star(6, 18, 28).star(7, 8, 27).star(8, 3, 25).star(9, 2, 17)
+                                        .link(0, 9).link(8, 0).link(0, 7).link(0, 6).link(5, 0).link(0, 4).link(3, 0).link(0, 2).link(1, 0)
                                         .build())
                                 .build())
                         .build())

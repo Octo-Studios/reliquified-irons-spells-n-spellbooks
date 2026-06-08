@@ -22,6 +22,7 @@ import it.hurts.sskirillss.relics.api.relics.data.AbilityData;
 import it.hurts.sskirillss.relics.init.RelicsMobEffects;
 import it.hurts.sskirillss.relics.init.RelicsScalingModels;
 import it.hurts.sskirillss.relics.items.relics.base.data.loot.LootTemplate;
+import it.hurts.sskirillss.relics.items.relics.base.data.research.ResearchTemplate;
 import it.hurts.sskirillss.relics.utils.MathUtils;
 import io.redspace.ironsspellbooks.util.ParticleHelper;
 import net.minecraft.server.level.ServerLevel;
@@ -106,6 +107,10 @@ public class DimensionKeyItem extends ISASRelicItem {
                                                 .formatValue(value -> MathUtils.formatTime(Math.max(0, (int) MathUtils.round(value, 0))))
                                                 .rankModifierVisibilityState("immortal_crossing", VisibilityState.OBFUSCATED)
                                                 .build())
+                                        .build())
+                                .research(ResearchTemplate.builder()
+                                        .star(0, 5, 20).star(1, 5, 11).star(2, 8, 5).star(3, 13, 5).star(4, 2, 23).star(5, 19, 23).star(6, 14, 26).star(7, 7, 26).star(8, 16, 20).star(9, 16, 11)
+                                        .link(1, 2).link(2, 3).link(5, 6).link(6, 7).link(7, 4).link(4, 0).link(0, 1).link(3, 9).link(9, 8).link(5, 8)
                                         .build())
                                 .build())
                         .build())
