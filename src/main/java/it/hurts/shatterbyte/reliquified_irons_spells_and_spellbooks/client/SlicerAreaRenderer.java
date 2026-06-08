@@ -18,8 +18,6 @@ import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 
 @EventBusSubscriber(modid = ReliquifiedIronsSpellsAndSpellbooks.MODID, value = Dist.CLIENT)
 public class SlicerAreaRenderer {
-    private static final RenderType AREA_RENDER_TYPE = RenderType.energySwirl(SpellRenderingHelper.SOLID, 0F, 0F);
-
     @SubscribeEvent
     public static void onRenderLevelStage(RenderLevelStageEvent event) {
         if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_PARTICLES)
@@ -67,10 +65,12 @@ public class SlicerAreaRenderer {
                 heights[i] = 0F;
         }
 
+        var renderType = RenderType.energySwirl(SpellRenderingHelper.SOLID, 0F, 0F);
+
         var camera = event.getCamera().getPosition();
         var poseStack = event.getPoseStack();
         var bufferSource = minecraft.renderBuffers().bufferSource();
-        var consumer = bufferSource.getBuffer(AREA_RENDER_TYPE);
+        var consumer = bufferSource.getBuffer(renderType);
 
         poseStack.pushPose();
         poseStack.translate(state.centerX() - camera.x, state.centerY() - camera.y, state.centerZ() - camera.z);
@@ -106,6 +106,6 @@ public class SlicerAreaRenderer {
         }
 
         poseStack.popPose();
-        bufferSource.endBatch(AREA_RENDER_TYPE);
+        bufferSource.endBatch(renderType);
     }
 }
