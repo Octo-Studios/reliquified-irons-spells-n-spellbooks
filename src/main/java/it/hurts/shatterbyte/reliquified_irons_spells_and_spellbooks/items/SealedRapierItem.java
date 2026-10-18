@@ -35,8 +35,10 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.EntityTravelToDimensionEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
@@ -332,7 +334,7 @@ public class SealedRapierItem extends ISASWearableRelicItem {
                     player.getXRot()
             );
             player.level().addFreshEntity(summon);
-            SummonManager.initSummon(summon, player, 630720000, new SummonedEntitiesCastData());
+            SummonManager.initSummon(player, summon, 630720000, new SummonedEntitiesCastData());
 
             updated.add(new RISASDataComponents.SealedWeaponSummonData(
                     1,
@@ -573,15 +575,19 @@ public class SealedRapierItem extends ISASWearableRelicItem {
                 return;
         }
 
+        @SubscribeEvent(priority = EventPriority.HIGHEST)
+        public static void onTravelToDimension(EntityTravelToDimensionEvent event) {
+            if (!(event.getEntity() instanceof ServerPlayer player) || player.level().isClientSide())
+                return;
+
+            for (var stack : EntityUtils.findEquippedCurios(player, RISASItems.SEALED_RAPIER.value()))
+                transferSummons(player, stack);
+        }
+
         @SubscribeEvent
         public static void onPlayerChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
             if (!(event.getEntity() instanceof ServerPlayer player) || player.level().isClientSide())
                 return;
-
-            for (var stack : EntityUtils.findEquippedCurios(player, RISASItems.SEALED_RAPIER.value())) {
-                discardSummons(player.getServer(), stack);
-                stack.remove(RISASDataComponents.SEALED_WEAPON_SUMMONS.get());
-            }
 
             var attackSpeed = player.getAttribute(Attributes.ATTACK_SPEED);
 
@@ -591,6 +597,44 @@ public class SealedRapierItem extends ISASWearableRelicItem {
                         "sealed_rapier_haste_aura"
                 ));
             }
+        }
+
+        static void transferSummons(ServerPlayer player, ItemStack stack) {
+            var server = player.getServer();
+
+            if (server == null)
+                return;
+
+            var summons = stack.getOrDefault(RISASDataComponents.SEALED_WEAPON_SUMMONS.get(), List.<RISASDataComponents.SealedWeaponSummonData>of());
+
+            if (summons.isEmpty())
+                return;
+
+            var gameTime = player.level().getGameTime();
+            var updated = new ArrayList<RISASDataComponents.SealedWeaponSummonData>(summons.size());
+
+            for (var summonData : summons) {
+                var level = server.getLevel(summonData.level());
+                Entity entity = null;
+
+                if (level != null && (summonData.summon().getMostSignificantBits() != 0L || summonData.summon().getLeastSignificantBits() != 0L))
+                    entity = level.getEntity(summonData.summon());
+
+                if (entity instanceof SummonedRapierEntity summon && summon.isAlive()) {
+                    summon.discard();
+                    updated.add(new RISASDataComponents.SealedWeaponSummonData(
+                            1,
+                            new UUID(0L, 0L),
+                            player.level().dimension(),
+                            gameTime
+                    ));
+                    continue;
+                }
+
+                updated.add(summonData);
+            }
+
+            stack.set(RISASDataComponents.SEALED_WEAPON_SUMMONS.get(), List.copyOf(updated));
         }
 
         static void discardSummons(MinecraftServer server, ItemStack stack) {
