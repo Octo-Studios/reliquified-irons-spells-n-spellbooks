@@ -343,6 +343,8 @@ public class DimensionKeyItem extends ISASRelicItem {
 
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity holder, int slotId, boolean isSelected) {
+        super.inventoryTick(stack, level, holder, slotId, isSelected);
+
         if (!(holder instanceof Player player))
             return;
 

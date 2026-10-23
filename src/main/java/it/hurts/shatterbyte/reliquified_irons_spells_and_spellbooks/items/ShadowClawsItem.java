@@ -270,6 +270,8 @@ public class ShadowClawsItem extends ExtendedSwordItem implements IRelicItem, IC
 
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+        super.inventoryTick(stack, level, entity, slotId, isSelected);
+
         if (!(entity instanceof ServerPlayer player) || level.isClientSide())
             return;
 

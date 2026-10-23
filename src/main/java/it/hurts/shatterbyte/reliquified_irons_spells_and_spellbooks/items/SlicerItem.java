@@ -277,6 +277,8 @@ public class SlicerItem extends ExtendedSwordItem implements IRelicItem, ICreati
 
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+        super.inventoryTick(stack, level, entity, slotId, isSelected);
+
         if (level.isClientSide()) {
             if (!stack.getOrDefault(RISASDataComponents.SLICER_ACTIVE.get(), false))
                 return;
