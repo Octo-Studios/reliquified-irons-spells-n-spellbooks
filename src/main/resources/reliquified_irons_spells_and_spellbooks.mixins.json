@@ -5,7 +5,6 @@
   "compatibilityLevel": "JAVA_21",
   "refmap": "reliquified_irons_spells_and_spellbooks.refmap.json",
   "mixins": [
-    "AnimatedActionGoalAccessor",
     "SummonedClaymoreTauntGoalMixin",
     "SummonedRapierEntityMixin",
     "SummonedWeaponEntityMixin"
